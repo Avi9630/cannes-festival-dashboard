@@ -3,7 +3,7 @@
     <div class="navbar-brand-box bg-logo">
         <!-- Dark Logo-->
         <a href="{{ url('/') }}" class="logo">
-            <img src="{{ asset('nfa/nfa-logo.png') }}" alt="" class="img-fluid" style="height: 60px">
+            <img src="{{ asset('cannes/CANNES.png') }}" alt="" class="img-fluid" style="height: 60px">
             {{-- style="width:110px" --}}
         </a>
         <!-- Light Logo-->
@@ -77,23 +77,24 @@
                             </li>
                         @endcan
 
-                        @can('nfa-feature')
+                        @can('cannes-entries-list')
                             <li class="nav-item">
                                 <a class="nav-link menu-link" href="#nfaFeature" data-bs-toggle="collapse" role="button"
                                     aria-expanded="false" aria-controls="indianPanoroma">
-                                    <i class="ri-flag-2-line"></i> <span data-key="">NFA-FEATURE</span>
+                                    <i class="ri-flag-2-line"></i> <span data-key="">CANNES ENTRIES</span>
                                 </a>
                                 <div class="collapse menu-dropdown" id="nfaFeature">
                                     <ul class="nav nav-sm flex-column">
                                         <li class="nav-item">
-                                            <a href="{{ route('nfa-feature') }}" class="nav-link" data-key="">LIST</a>
+                                            <a href="{{ route('cannes-entries-list') }}" class="nav-link"
+                                                data-key="">LIST</a>
                                         </li>
                                     </ul>
                                 </div>
                             </li>
                         @endcan
 
-                        @can('nfa-non-feature')
+                        {{-- @can('nfa-non-feature')
                             <li class="nav-item">
                                 <a class="nav-link menu-link" href="#nfaNonFeature" data-bs-toggle="collapse" role="button"
                                     aria-expanded="false" aria-controls="indianPanoroma">
@@ -141,7 +142,7 @@
                                     </ul>
                                 </div>
                             </li>
-                        @endcan
+                        @endcan --}}
                     @else
                         <li class="nav-item">
                             <a class="nav-link menu-link" href="{{ url('/') }}">

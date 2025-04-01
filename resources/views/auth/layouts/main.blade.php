@@ -29,7 +29,7 @@
                         <div class="text-center mb-4 text-white-50">
                             <div>
                                 <a href="{{ url('/') }}" class="d-inline-block iffi-logo">
-                                    <img src="{{ asset('nfa/nfa-logo.png') }}" alt="" style="height: 60px">
+                                    <img src="{{ asset('cannes/CANNES.png') }}" alt="" style="height: 60px">
                                 </a>
                             </div>
                         </div>

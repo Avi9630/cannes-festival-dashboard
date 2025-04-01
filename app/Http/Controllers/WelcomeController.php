@@ -16,28 +16,30 @@ class WelcomeController extends Controller
     public function index()
     {
         //feature
-        $feature = NfaFeature::selectRaw('
-                    COUNT(*) as totalForms,
-                    SUM(step = 13) as paidForms
-                ')->first();
-        $totalFeature       =   $feature->totalForms;
-        $paidFeature        =   $feature->paidForms;
+        // $feature = NfaFeature::selectRaw('
+        //             COUNT(*) as totalForms,
+        //             SUM(step = 13) as paidForms
+        //         ')->first();
+        // $totalFeature       =   $feature->totalForms;
+        // $paidFeature        =   $feature->paidForms;
 
         // non-feature
-        $nonFeature = NfaNonFeature::selectRaw('
-                    COUNT(*) as totalForms,
-                    SUM(step = 10) as paidForms
-                ')->first();
-        $totalNonFeature       =   $nonFeature->totalForms;
-        $paidNonFeature        =   $nonFeature->paidForms;
+        // $nonFeature = NfaNonFeature::selectRaw('
+        //             COUNT(*) as totalForms,
+        //             SUM(step = 10) as paidForms
+        //         ')->first();
+        // $totalNonFeature       =   $nonFeature->totalForms;
+        // $paidNonFeature        =   $nonFeature->paidForms;
 
-        return view('welcome', [
-            //feature
-            'totalFeature'   =>  $totalFeature,
-            'paidFeature'    =>  $paidFeature,
-            //non-feature
-            'totalNonFeature'   =>  $totalNonFeature,
-            'paidNonFeature'    =>  $paidNonFeature,
-        ]);
+        // return view('welcome', [
+        //     //feature
+        //     'totalFeature'   =>  $totalFeature,
+        //     'paidFeature'    =>  $paidFeature,
+        //     //non-feature
+        //     'totalNonFeature'   =>  $totalNonFeature,
+        //     'paidNonFeature'    =>  $paidNonFeature,
+        // ]);
+
+        return view('welcome');
     }
 }

@@ -8,6 +8,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\CmotController;
+use App\Http\Controllers\FestivalEntryController;
 use App\Http\Controllers\NfaController;
 use Illuminate\Support\Facades\Route;
 
@@ -50,6 +51,13 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('best-book-cinema',  [BestBookCinemaController::class, 'index'])->name('best-book-cinema');
     Route::get('best-film-critic',  [BestFilmCriticController::class, 'index'])->name('best-film-critic');
 
+    Route::get('cannes-entries-list',           [FestivalEntryController::class, 'index'])->name('cannes-entries-list');
+    Route::get('cannes-entries-view/{id}',      [FestivalEntryController::class, 'view'])->name('cannes-entries.view');
+    Route::get('cannes-entries-delete/{id}',    [FestivalEntryController::class, 'destroy'])->name('cannes-entries.delete');
+    Route::get('cannes-entries-delete/{id}',    [FestivalEntryController::class, 'destroy'])->name('cannes-entries.delete');
+    Route::get('score-by/{id}',                 [FestivalEntryController::class, 'score']); //->name('score.by');
+    Route::post('score-by/{id}',                [FestivalEntryController::class, 'feedback']); //->name('score.by');
+
     Route::controller(NfaController::class)->group(function () {
 
         //FEATURE
@@ -88,6 +96,7 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('ip/zip/{id}',           'downloadDocumentsAsZip')->name('ip.zip');
         Route::get('ip/pdf/{id}',            'ippdf')->name('ip.pdf');
     });
+
     Route::get('permission_search',     [PermissionController::class, 'search'])->name('permissions.search');
 });
 
