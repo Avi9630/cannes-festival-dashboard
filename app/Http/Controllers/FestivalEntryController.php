@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Auth;
 use Spatie\Permission\Models\Role;
 use App\Models\FestivalEntry;
@@ -20,7 +21,6 @@ class FestivalEntryController extends Controller
 
     public function index()
     {
-
         $roleName = Role::select('name')->where('id', $this->user->role_id)->first();
         if (!$roleName) {
             return redirect()->back()->with('warning', 'Role not valid.!!');
@@ -29,10 +29,11 @@ class FestivalEntryController extends Controller
         if ($roleName['name'] === 'JURY') {
             $juryAssign =   JuryAssign::where(['user_id' => $this->user->id])->pluck('festival_entry_id');
             $entries    =   FestivalEntry::whereNotIn('id', $juryAssign)->paginate(10);
+            $count      =   FestivalEntry::whereNotIn('id', $juryAssign)->count();
         } else {
             $entries        =   FestivalEntry::paginate(10);
+            $count          =   FestivalEntry::count();
         }
-        $count          =   FestivalEntry::count();
         // session()->put('nfaFeatures', $nfaFeatures);
         return view('festival-entry.index', [
             'entries' => $entries,
@@ -44,7 +45,6 @@ class FestivalEntryController extends Controller
     {
         $festival = FestivalEntry::find($id);
         if ($this->roleName['name'] === 'SUPERADMIN') {
-            // $juryList   =   User::where('role_id', 3)->pluck('id');
             $juryAssign =   JuryAssign::where('festival_entry_id', $id)->get();
             return view('festival-entry.show', [
                 'festival'      =>  $festival,
@@ -99,5 +99,52 @@ class FestivalEntryController extends Controller
         } else {
             return redirect()->back()->with('warning', 'You have already given your score.!!'); //->with('Something went wrong.!');
         }
+    }
+
+    public function search(Request $request)
+    {
+        $payload = $request->all();
+
+        $query = FestivalEntry::query();
+
+        $query->when($payload, function (Builder $builder) use ($payload) {
+
+            if (!empty($payload['from_date']) && !empty($payload['to_date'])) {
+                $builder->whereDate('created_at', '>=', $payload['from_date']);
+                $builder->whereDate('created_at', '<=', $payload['to_date']);
+            } elseif (empty($payload['from_date']) && !empty($payload['to_date'])) {
+                $todayDate = date('Y-m-d');
+                $builder->whereDate('created_at', '>=', $todayDate);
+                $builder->whereDate('created_at', '<=', $payload['to_date']);
+            } elseif (!empty($payload['from_date']) && empty($payload['to_date'])) {
+                $todayDate = date('Y-m-d');
+                $builder->whereDate('created_at', '>=', $payload['from_date']);
+                $builder->whereDate('created_at', '<=', $todayDate);
+            }
+
+            // if (!empty($payload['payment_status'])) {
+            //     if ($payload['payment_status'] === '13') {
+            //         $builder->where('step', $payload['payment_status']);
+            //     } elseif ($payload['payment_status'] === '1') {
+            //         if (!empty($payload['step'])) {
+            //             $builder->where('step', $payload['step']);
+            //         } else {
+            //             $builder->whereIn('step', range(1, 12));
+            //         }
+            //     }
+            // } else {
+            //     $builder->where('step', 13);
+            // }
+        });
+
+        // $filteredData = $query->get();
+        // session()->put('festival', $filteredData);
+        $entries    =   $query->paginate(10);
+        $count      =   $query->count();
+
+        return view('festival-entry.index', [
+            'entries'   =>  $entries,
+            'count'     =>  $count,
+        ]);
     }
 }

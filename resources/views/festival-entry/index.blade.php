@@ -8,7 +8,7 @@
         <div class="pt-4 mb-4 mb-lg-3 pb-lg-4">
             <div class="g-4">
                 <div>
-                    {{-- <form action="{{ route('nfa-feature-search') }}" method="GET" class="filter-project">@csrf
+                    <form action="{{ route('cannes-entries-search') }}" method="GET" class="filter-project">@csrf
                         @method('GET')
                         <div class="row">
 
@@ -30,7 +30,7 @@
                                 </div>
                             </div>
 
-                            <div class="col-md-6">
+                            {{-- <div class="col-md-6">
                                 <div class="mb-3">
                                     <label for="payment_status"><strong>Payment status</strong></label>
                                     <select name="payment_status" id="payment_status" class="form-select">
@@ -43,9 +43,9 @@
                                         @endforeach
                                     </select>
                                 </div>
-                            </div>
+                            </div> --}}
 
-                            <div class="col-md-6" id="step-selection" style="display: none;">
+                            {{-- <div class="col-md-6" id="step-selection" style="display: none;">
                                 <div class="mb-3">
                                     <label for="payment_status"><strong>Select steps</strong></label>
                                     <select name="step" class="form-select">
@@ -58,18 +58,18 @@
                                         @endforeach
                                     </select>
                                 </div>
-                            </div>
+                            </div> --}}
 
                             <div class="col-lg-6">
                                 <label for="name" class="form-label w-100">&nbsp;</label>
                                 <button type="submit" class="btn common-btn">SEARCH</button>
-                                @can('ip-non_featured_download')
+                                {{-- @can('ip-non_featured_download')
                                     <a href="{{ route('export.search') }}" class="btn common-btn">
                                         SEARCH-EXPORT</a>
-                                @endcan
+                                @endcan --}}
                             </div>
                         </div>
-                    </form> --}}
+                    </form>
 
                     {{-- <div class="text-end">
                         <a href="{{ route('nfa-feature') }}" class="btn common-btn">RESET</a>
@@ -114,9 +114,9 @@
                                             <th>Name</th>
                                             <th>Email</th>
                                             <th>Mobile</th>
-                                            <th>Film Title</th>
+                                            {{-- <th>Film Title</th>
                                             <th>Film Title English</th>
-                                            <th>Language</th>
+                                            <th>Language</th> --}}
                                             {{-- <th>Producer Name</th>
                                             <th>Production Company</th>
                                             <th>Screener Link</th>
@@ -152,11 +152,11 @@
 
                                                 <td>{{ $entry->mobile ?? '' }}</td>
 
-                                                <td>{{ $entry->film_title }}</td>
+                                                {{-- <td>{{ $entry->film_title }}</td>
 
                                                 <td>{{ $entry->film_title_english }}</td>
 
-                                                <td>{{ $entry->LANGUAGE }}</td>
+                                                <td>{{ $entry->LANGUAGE }}</td> --}}
 
                                                 {{-- <td>{{ $entry->producer_name ?? '' }}</td>
 
@@ -179,7 +179,7 @@
                                                             <i class="ri-eye-fill black-text"></i>
                                                         </a>
                                                     @endcan
-                                                    @can('delete')
+                                                    {{-- @can('delete')
                                                         <form action="{{ route('cannes-entries.delete', $entry->id) }}"
                                                             method="post" style="display: inline"
                                                             onsubmit="return confirmDelete()">
@@ -188,7 +188,7 @@
                                                                 <i class="ri-delete-bin-fill "></i>
                                                             </button>
                                                         </form>
-                                                    @endcan
+                                                    @endcan --}}
                                                 </td>
 
                                             </tr>

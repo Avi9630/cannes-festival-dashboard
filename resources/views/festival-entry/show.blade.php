@@ -22,8 +22,6 @@
                         </div>
 
                         <div class="card-body">
-                            <br>
-
                             <div class="card">
                                 <div class="card-body">
                                     <div class="row pt-2">
@@ -92,30 +90,6 @@
                                             <p><strong>Director Bio : </strong> {{ $festival->director_bio ?? '' }}</p>
                                         </div>
                                     </div>
-
-                                    @if (isset($juryScores) && !empty($juryScores))
-                                        <div class="row pt-2">
-                                            <h2 class="card-title">Jury Scores</h2>
-                                            <table class="table custom-table">
-                                                <thead>
-                                                    <tr>
-                                                        <th>Ref.No</th>
-                                                        <th>Jury Name</th>
-                                                        <th>Overall Score</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    @foreach ($juryScores as $key => $score)
-                                                        <tr>
-                                                            <td> {{ $score->id }} </td>
-                                                            <td> {{ $score->user->name ?? '' }} </td>
-                                                            <td> {{ $score->overall_score ?? '' }} </td>
-                                                        </tr>
-                                                    @endforeach
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    @endif
                                 </div>
                             </div>
 
@@ -128,7 +102,48 @@
                                 @endif
                             </div>
                         </div>
+                        <br>
                     </div>
+                    @if (Auth::check() && Auth::user()->hasRole('SUPERADMIN'))
+                        <div class="card">
+                            <div class="card-header">
+                                <h4 class="card-title">JURY SCORES</h4>
+                            </div>
+                            <div class="card-body">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <div class="row pt-2">
+                                            @if (isset($juryScores) && !empty($juryScores) && count($juryScores) > 0)
+                                                <table class="table custom-table">
+                                                    <thead>
+                                                        <tr>
+                                                            {{-- <th>Ref.No</th> --}}
+                                                            <th>Jury Name</th>
+                                                            <th>Overall Score</th>
+                                                            <th>Feedback</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        @foreach ($juryScores as $key => $score)
+                                                            <tr>
+                                                                {{-- <td> {{ $score->id }} </td> --}}
+                                                                <td> {{ $score->user->name ?? '' }} </td>
+                                                                <td> {{ $score->overall_score ?? '' }} </td>
+                                                                <td> {{ $score->feedback ?? '' }} </td>
+                                                            </tr>
+                                                        @endforeach
+                                                    </tbody>
+                                                </table>
+                                            @else
+                                                <p>Marks not given by Jury.!!</p>
+                                            @endif
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    @endif
                 </div>
             </div>
         </div>

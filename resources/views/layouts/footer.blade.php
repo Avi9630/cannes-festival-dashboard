@@ -5,7 +5,7 @@
             <div class="col-sm-12">
                 <script>
                     document.write(new Date().getFullYear())
-                </script> © iffigoa.
+                </script> © cannes.
             </div>
         </div>
     </div>
