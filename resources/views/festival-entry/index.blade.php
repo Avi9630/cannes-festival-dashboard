@@ -30,36 +30,6 @@
                                 </div>
                             </div>
 
-                            {{-- <div class="col-md-6">
-                                <div class="mb-3">
-                                    <label for="payment_status"><strong>Payment status</strong></label>
-                                    <select name="payment_status" id="payment_status" class="form-select">
-                                        <option value="">Select status</option>
-                                        @foreach ($paids as $key => $value)
-                                            <option value="{{ $key }}"
-                                                {{ isset($payload['payment_status']) && $payload['payment_status'] == $key ? 'selected' : '' }}>
-                                                {{ $value }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            </div> --}}
-
-                            {{-- <div class="col-md-6" id="step-selection" style="display: none;">
-                                <div class="mb-3">
-                                    <label for="payment_status"><strong>Select steps</strong></label>
-                                    <select name="step" class="form-select">
-                                        <option value="">Select status</option>
-                                        @foreach ($steps as $key => $value)
-                                            <option value="{{ $key }}"
-                                                {{ isset($payload['step']) && $payload['step'] == $key ? 'selected' : '' }}>
-                                                {{ $value }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            </div> --}}
-
                             <div class="col-lg-6">
                                 <label for="name" class="form-label w-100">&nbsp;</label>
                                 <button type="submit" class="btn common-btn">SEARCH</button>
@@ -71,10 +41,10 @@
                         </div>
                     </form>
 
-                    {{-- <div class="text-end">
-                        <a href="{{ route('nfa-feature') }}" class="btn common-btn">RESET</a>
-                        <a href="{{ route('nfa-feature-export') }}" class="btn common-btn">EXPORT-ALL </a>
-                    </div> --}}
+                    <div class="text-end">
+                        <a href="{{ route('cannes-entries-list') }}" class="btn common-btn">RESET</a>
+                        <a href="{{ route('cannes-entries-export') }}" class="btn common-btn">EXPORT-ALL </a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -108,8 +78,8 @@
                                 @if (count($entries) > 0)
                                     <thead>
                                         <tr>
-                                            {{-- <th>PDF</th>
-                                            <th>ZIP</th> --}}
+                                            <th>PDF</th>
+                                            {{-- <th>ZIP</th> --}}
                                             <th>Ref.No</th>
                                             <th>Name</th>
                                             <th>Email</th>
@@ -131,14 +101,14 @@
                                     <tbody>
                                         @foreach ($entries as $key => $entry)
                                             <tr>
-                                                {{-- <td>
-                                                    <a href="{{ route('nfa-feature-pdf', ['id' => $entry->id]) }}"
+                                                <td>
+                                                    <a href="{{ route('cannes-entries-pdf', ['id' => $entry->id]) }}"
                                                         class="text-danger" target="_blank">
                                                         <i class="ri-file-pdf-line"></i>
                                                     </a>
                                                 </td>
 
-                                                <td>
+                                                {{-- <td>
                                                     <a href="{{ route('nfa-feature-zip', ['id' => $entry->id]) }}"
                                                         class="text-danger"><i class="ri-folder-zip-line"></i>
                                                     </a>
