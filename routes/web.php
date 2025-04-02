@@ -25,17 +25,21 @@ Route::get('changePassword',      [AuthController::class, 'changePasswordView'])
 Route::post('changePassword',     [AuthController::class, 'changePassword'])->name('changePassword');
 
 Route::group(['middleware' => 'auth'], function () {
+
     Route::get('/',                 [WelcomeController::class, 'index']);
     Route::get('home',              [AuthController::class, 'home'])->name('home');
     Route::get('logout',            [AuthController::class, 'logout'])->name('logout');
+
     Route::resources([
         'roles'             =>  RoleController::class,
         'users'             =>  UserController::class,
         'permissions'       =>  PermissionController::class,
     ]);
+
     Route::controller(UserController::class)->group(function () {
         Route::get('user-search',       'search')->name('user.search');
     });
+
     Route::controller(FestivalEntryController::class)->group(function () {
         Route::get('cannes-entries-list',           'index')->name('cannes-entries-list');
         Route::get('cannes-entries-search',         'search')->name('cannes-entries-search');
@@ -49,6 +53,7 @@ Route::group(['middleware' => 'auth'], function () {
     });
     Route::get('permission_search',     [PermissionController::class, 'search'])->name('permissions.search');
 });
+
 Route::fallback(function () {
     return abort(401, "User can't perform this action.");
 });
