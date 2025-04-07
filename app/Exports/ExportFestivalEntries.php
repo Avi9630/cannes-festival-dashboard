@@ -37,6 +37,7 @@ class ExportFestivalEntries implements FromCollection, WithHeadings, WithMapping
             '=HYPERLINK("' . $entry->film_link . '", "' . $entry->film_link . '")',
             $entry->PASSWORD,
             $entry->director_name,
+            \Carbon\Carbon::parse($entry->created_at)->format('d-m-Y'),
         ];
         return $data;
     }
@@ -57,6 +58,7 @@ class ExportFestivalEntries implements FromCollection, WithHeadings, WithMapping
             'Film Link',
             'Password',
             'Director Name',
+            'Created Date'
         ];
     }
 
