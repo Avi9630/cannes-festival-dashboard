@@ -25,7 +25,6 @@ class AuthController extends Controller
         $this->otp = rand(111111, 999999);
     }
 
-
     public function index()
     {
         return view('auth.login');

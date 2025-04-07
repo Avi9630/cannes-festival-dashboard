@@ -3,12 +3,13 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Database\Eloquent\Builder;
+use App\Exports\ExportFestivalEntries;
 use Illuminate\Support\Facades\Auth;
+use Maatwebsite\Excel\Facades\Excel;
 use Spatie\Permission\Models\Role;
 use App\Models\FestivalEntry;
 use Illuminate\Http\Request;
 use App\Models\JuryAssign;
-use App\Models\User;
 
 class FestivalEntryController extends Controller
 {
@@ -25,13 +26,12 @@ class FestivalEntryController extends Controller
         if (!$roleName) {
             return redirect()->back()->with('warning', 'Role not valid.!!');
         }
-        //CASE :- JURY
         if ($roleName['name'] === 'JURY') {
             $juryAssign =   JuryAssign::where(['user_id' => $this->user->id])->pluck('festival_entry_id');
-            $entries    =   FestivalEntry::whereNotIn('id', $juryAssign)->paginate(10);
+            $entries    =   FestivalEntry::whereNotIn('id', $juryAssign)->orderBy('id', 'DESC')->paginate(10);
             $count      =   FestivalEntry::whereNotIn('id', $juryAssign)->count();
         } else {
-            $entries        =   FestivalEntry::paginate(10);
+            $entries        =   FestivalEntry::orderBy('id', 'DESC')->paginate(10);
             $count          =   FestivalEntry::count();
         }
         // session()->put('nfaFeatures', $nfaFeatures);
@@ -139,7 +139,7 @@ class FestivalEntryController extends Controller
 
         // $filteredData = $query->get();
         // session()->put('festival', $filteredData);
-        $entries    =   $query->paginate(10);
+        $entries    =   $query->orderBy('id', 'DESC')->paginate(10);
         $count      =   $query->count();
 
         return view('festival-entry.index', [
@@ -147,4 +147,67 @@ class FestivalEntryController extends Controller
             'count'     =>  $count,
         ]);
     }
+
+    public function exportAll()
+    {
+        // $festivalEntries = FestivalEntry::select('*')->limit(1)->get();
+        $festivalEntries = FestivalEntry::select('*')->get();
+        $fileName = 'festival_entries.xls';
+        return Excel::download(new ExportFestivalEntries($festivalEntries), $fileName);
+    }
+
+    // public function cannesPdf(Request $request, $id)
+    // {
+    //     $nfaFeatures = NfaFeature::with('documents')
+    //         ->where(['id' => $id])
+    //         ->first();
+
+    //     $documents = Document::where('context_id', $id)
+    //         ->where('form_type', 1)
+    //         ->get();
+
+    //     $producers      =   Producer::with('featureDocuments')->where(['nfa_feature_id' => $id])->get();
+    //     $directors      =   Director::with('featureDocuments')->where(['nfa_feature_id' => $id])->get();
+    //     $actors         =   Actor::where('nfa_feature_id', $id)->get();
+    //     $songs          =   Song::where('nfa_feature_id', $id)->get();
+    //     $audiographers  =   Audiographer::where('nfa_feature_id', $id)->get();
+    //     $tempDir        =   sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'mpdf';
+
+    //     if (!file_exists($tempDir)) {
+    //         mkdir($tempDir, 0777, true);
+    //     }
+    //     // Add Hindi font configuration
+    //     $defaultConfig      =   (new ConfigVariables())->getDefaults();
+    //     $fontDirs           =   $defaultConfig['fontDir'];
+    //     $defaultFontConfig  =   (new FontVariables())->getDefaults();
+    //     $fontData           =   $defaultFontConfig['fontdata'];
+    //     $mpdf = new Mpdf([
+    //         'tempDir' => $tempDir,
+    //         'fontDir' => array_merge($fontDirs, [
+    //             base_path('storage/fonts/static'),
+    //         ]),
+    //         'fontdata' => $fontData + [
+    //             'hindi' => [
+    //                 'R' => 'NotoSansDevanagari-Regular.ttf',
+    //                 'B' => 'NotoSansDevanagari-Bold.ttf',
+    //             ],
+    //         ],
+    //         'default_font' => 'hindi',
+    //     ]);
+    //     $data = [];
+    //     $html = view('nfa-feature.pdf', [
+    //         'title'             =>  'NFA Feature Film',
+    //         'date'              =>  date('M-d-y H:i:s'),
+    //         'nfaFeatures'       =>  $nfaFeatures,
+    //         'documents'         =>  $documents,
+    //         'producers'        =>  $producers,
+    //         'directors'        =>  $directors,
+    //         'actors'           =>  $actors,
+    //         'songs'            =>  $songs,
+    //         'audiographers'    =>  $audiographers,
+    //     ]);
+    //     $mpdf->WriteHTML($html);
+    //     $pdfFilePath = $nfaFeatures->film_title_devnagri . '.pdf';
+    //     $mpdf->Output($pdfFilePath, 'I'); // 'D' for download, 'I' for inline view
+    // }
 }

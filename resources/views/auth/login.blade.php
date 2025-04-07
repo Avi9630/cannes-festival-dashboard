@@ -36,10 +36,10 @@
                             </div>
 
                             <div class="mb-3">
-                                {{-- <div class="float-end">
+                                <div class="float-end">
                                     <a href="{{ route('sendOtp') }}" class="text-primary">Forgot
                                         password?</a>
-                                </div> --}}
+                                </div>
                                 <label class="form-label" for="password-input">Password</label>
                                 <div class="position-relative auth-pass-inputgroup mb-3">
                                     <input type="password" name="password"
