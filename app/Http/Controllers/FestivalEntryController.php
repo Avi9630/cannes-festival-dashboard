@@ -32,11 +32,10 @@ class FestivalEntryController extends Controller
             $count      =   FestivalEntry::whereNotIn('id', $juryAssign)->count();
         } else {
             $entries            =   FestivalEntry::where('disclaimer', 1)->orderBy('id', 'DESC')->paginate(10);
-            $count              =   FestivalEntry::count();
+            $count              =   FestivalEntry::where('disclaimer', 1)->count();
             $festivalEntries    =   FestivalEntry::where('disclaimer', 1)->orderBy('id', 'DESC')->get();
             session()->put('cannes-festival', $festivalEntries);
         }
-
         return view('festival-entry.index', [
             'entries' => $entries,
             'count' => $count,
