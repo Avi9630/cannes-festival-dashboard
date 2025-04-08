@@ -48,6 +48,7 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('cannes-entries-delete/{id}',    'destroy')->name('cannes-entries.delete');
         Route::get('cannes-entries/pdf/{id}',       'cannesPdf')->name('cannes-entries-pdf');
         Route::get('cannes-entries-export',         'exportAll')->name('cannes-entries-export');
+        Route::get('cannes-entries-export-search',  'exportSearch')->name('export.cannes-search');
         Route::get('score-by/{id}',                 'score');
         Route::post('score-by/{id}',                'feedback');
     });

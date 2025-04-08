@@ -12,19 +12,49 @@
                         @method('GET')
                         <div class="row">
 
+                            @php
+                                $years = [
+                                    1 => '2025',
+                                    2 => '2024',
+                                ];
+                            @endphp
+
                             <div class="col-md-6">
                                 <div class="mb-3">
-                                    <label for="name" class="form-label"><strong>From Date</strong></label>
-                                    <input type="date" name="from_date" class="form-control"
+                                    <label for="year"><strong>Year</strong></label>
+                                    <select name="year" class="form-select">
+                                        <option value="">Select year</option>
+                                        @foreach ($years as $key => $value)
+                                            <option value="{{ $key }}"
+                                                {{ isset($payload['year']) && $payload['year'] == $key ? 'selected' : '' }}>
+                                                {{ $value }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6 from_date" id="fromDateField">
+                                <div class="mb-3">
+                                    <label for="from_date" class="form-label"><strong>From Date</strong></label>
+                                    {{-- <input type="date" name="from_date" class="form-control"
+                                        value="{{ isset($payload['from_date']) ? $payload['from_date'] : '' }}"
+                                        placeholder="Please select date"> --}}
+
+                                    <input type="text" name="from_date" id="from_date" class="form-control"
                                         value="{{ isset($payload['from_date']) ? $payload['from_date'] : '' }}"
                                         placeholder="Please select date">
                                 </div>
                             </div>
 
-                            <div class="col-md-6">
+                            <div class="col-md-6 to_date" id="toDateField">
                                 <div class="mb-3">
                                     <label for="email"><strong>To Date</strong></label>
-                                    <input type="date" name="to_date" class="form-control"
+                                    {{-- <input type="to_date" name="to_date" class="form-control"
+                                        value="{{ isset($payload['to_date']) ? $payload['to_date'] : '' }}"
+                                        placeholder="Please select date"> --}}
+
+                                    <input type="text" name="to_date" id="to_date" class="form-control"
                                         value="{{ isset($payload['to_date']) ? $payload['to_date'] : '' }}"
                                         placeholder="Please select date">
                                 </div>
@@ -33,10 +63,10 @@
                             <div class="col-lg-6">
                                 <label for="name" class="form-label w-100">&nbsp;</label>
                                 <button type="submit" class="btn common-btn">SEARCH</button>
-                                {{-- @can('ip-non_featured_download')
-                                    <a href="{{ route('export.search') }}" class="btn common-btn">
-                                        SEARCH-EXPORT</a>
-                                @endcan --}}
+                                {{-- @can('ip-non_featured_download') --}}
+                                <a href="{{ route('export.cannes-search') }}" class="btn common-btn">
+                                    SEARCH-EXPORT</a>
+                                {{-- @endcan --}}
                             </div>
                         </div>
                     </form>
@@ -184,4 +214,50 @@
             </div>
         </div>
     </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            function toggleDateFields() {
+                var selectedYear = $('select[name="year"]').val();
+                if (selectedYear != '1') {
+                    $('.from_date').hide();
+                    $('.to_date').hide();
+                } else {
+                    $('.from_date').show();
+                    $('.to_date').show();
+                }
+            }
+            toggleDateFields();
+            $('select[name="year"]').change(function() {
+                toggleDateFields();
+            });
+        });
+    </script>
+
+    <script>
+        $(function() {
+            var minAllowedDate = new Date(2025, 0, 1);
+            // Set up datepickers
+            $("#from_date").datepicker({
+                dateFormat: "yy-mm-dd",
+                minDate: minAllowedDate,
+                onClose: function(selectedDate) {
+                    $("#to_date").datepicker("option", "minDate", selectedDate);
+                }
+            });
+
+            $("#to_date").datepicker({
+                dateFormat: "yy-mm-dd",
+                onClose: function(selectedDate) {
+                    $("#from_date").datepicker("option", "maxDate", selectedDate);
+                }
+            });
+        });
+    </script>
+
+
 @endsection

@@ -31,10 +31,12 @@ class FestivalEntryController extends Controller
             $entries    =   FestivalEntry::whereNotIn('id', $juryAssign)->orderBy('id', 'DESC')->paginate(10);
             $count      =   FestivalEntry::whereNotIn('id', $juryAssign)->count();
         } else {
-            $entries        =   FestivalEntry::orderBy('id', 'DESC')->paginate(10);
-            $count          =   FestivalEntry::count();
+            $entries            =   FestivalEntry::where('disclaimer', 1)->orderBy('id', 'DESC')->paginate(10);
+            $count              =   FestivalEntry::count();
+            $festivalEntries    =   FestivalEntry::where('disclaimer', 1)->orderBy('id', 'DESC')->get();
+            session()->put('cannes-festival', $festivalEntries);
         }
-        // session()->put('nfaFeatures', $nfaFeatures);
+
         return view('festival-entry.index', [
             'entries' => $entries,
             'count' => $count,
@@ -122,29 +124,27 @@ class FestivalEntryController extends Controller
                 $builder->whereDate('created_at', '<=', $todayDate);
             }
 
-            // if (!empty($payload['payment_status'])) {
-            //     if ($payload['payment_status'] === '13') {
-            //         $builder->where('step', $payload['payment_status']);
-            //     } elseif ($payload['payment_status'] === '1') {
-            //         if (!empty($payload['step'])) {
-            //             $builder->where('step', $payload['step']);
-            //         } else {
-            //             $builder->whereIn('step', range(1, 12));
-            //         }
-            //     }
-            // } else {
-            //     $builder->where('step', 13);
-            // }
+            if (!empty($payload['year'])) {
+                if ($payload['year'] === '1') {
+                    $builder->where('disclaimer', 1);
+                } elseif ($payload['year'] === '2') {
+                    $builder->where('disclaimer', NULL);
+                }
+            } else {
+                $builder->where('disclaimer', 1);
+            }
         });
 
-        // $filteredData = $query->get();
-        // session()->put('festival', $filteredData);
+        $filteredData = $query->get();
+        session()->put('cannes-festival', $filteredData);
+
         $entries    =   $query->orderBy('id', 'DESC')->paginate(10);
         $count      =   $query->count();
 
         return view('festival-entry.index', [
             'entries'   =>  $entries,
             'count'     =>  $count,
+            'payload'   =>  $payload
         ]);
     }
 
@@ -154,6 +154,18 @@ class FestivalEntryController extends Controller
         $festivalEntries = FestivalEntry::select('*')->get();
         $fileName = 'festival_entries.xls';
         return Excel::download(new ExportFestivalEntries($festivalEntries), $fileName);
+    }
+
+    public function exportSearch()
+    {
+        if (session()->has('cannes-festival')) {
+            $festivalEntries = session()->get('cannes-festival');
+            $fileName = 'cannes-featival.xls';
+            // return Excel::download(new ExportBySearch($cannesFestival), $fileName);
+            return Excel::download(new ExportFestivalEntries($festivalEntries), $fileName);
+        } else {
+            return view('festival-entry.index')->with('danger', 'Session not set yet.!!');
+        }
     }
 
     // public function cannesPdf(Request $request, $id)
