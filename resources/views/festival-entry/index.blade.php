@@ -5,79 +5,83 @@
 @section('content')
     <div class="container-fluid">
 
-        <div class="pt-4 mb-4 mb-lg-3 pb-lg-4">
-            <div class="g-4">
-                <div>
-                    <form action="{{ route('cannes-entries-search') }}" method="GET" class="filter-project">@csrf
-                        @method('GET')
-                        <div class="row">
+        @can('can-search')
+            <div class="pt-4 mb-4 mb-lg-3 pb-lg-4">
+                <div class="g-4">
+                    <div>
+                        <form action="{{ route('cannes-entries-search') }}" method="GET" class="filter-project">@csrf
+                            @method('GET')
+                            <div class="row">
 
-                            @php
-                                $years = [
-                                    1 => '2025',
-                                    2 => '2024',
-                                ];
-                            @endphp
+                                @php
+                                    $years = [
+                                        1 => '2025',
+                                        2 => '2024',
+                                    ];
+                                @endphp
 
-                            <div class="col-md-6">
-                                <div class="mb-3">
-                                    <label for="year"><strong>Year</strong></label>
-                                    <select name="year" class="form-select">
-                                        <option value="">Select year</option>
-                                        @foreach ($years as $key => $value)
-                                            <option value="{{ $key }}"
-                                                {{ isset($payload['year']) && $payload['year'] == $key ? 'selected' : '' }}>
-                                                {{ $value }}
-                                            </option>
-                                        @endforeach
-                                    </select>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="year"><strong>Year</strong></label>
+                                        <select name="year" class="form-select">
+                                            <option value="">Select year</option>
+                                            @foreach ($years as $key => $value)
+                                                <option value="{{ $key }}"
+                                                    {{ isset($payload['year']) && $payload['year'] == $key ? 'selected' : '' }}>
+                                                    {{ $value }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
                                 </div>
-                            </div>
 
-                            <div class="col-md-6 from_date" id="fromDateField">
-                                <div class="mb-3">
-                                    <label for="from_date" class="form-label"><strong>From Date</strong></label>
-                                    {{-- <input type="date" name="from_date" class="form-control"
+                                <div class="col-md-6 from_date" id="fromDateField">
+                                    <div class="mb-3">
+                                        <label for="from_date" class="form-label"><strong>From Date</strong></label>
+                                        {{-- <input type="date" name="from_date" class="form-control"
                                         value="{{ isset($payload['from_date']) ? $payload['from_date'] : '' }}"
                                         placeholder="Please select date"> --}}
 
-                                    <input type="text" name="from_date" id="from_date" class="form-control"
-                                        value="{{ isset($payload['from_date']) ? $payload['from_date'] : '' }}"
-                                        placeholder="Please select date">
+                                        <input type="text" name="from_date" id="from_date" class="form-control"
+                                            value="{{ isset($payload['from_date']) ? $payload['from_date'] : '' }}"
+                                            placeholder="Please select date">
+                                    </div>
                                 </div>
-                            </div>
 
-                            <div class="col-md-6 to_date" id="toDateField">
-                                <div class="mb-3">
-                                    <label for="email"><strong>To Date</strong></label>
-                                    {{-- <input type="to_date" name="to_date" class="form-control"
+                                <div class="col-md-6 to_date" id="toDateField">
+                                    <div class="mb-3">
+                                        <label for="email"><strong>To Date</strong></label>
+                                        {{-- <input type="to_date" name="to_date" class="form-control"
                                         value="{{ isset($payload['to_date']) ? $payload['to_date'] : '' }}"
                                         placeholder="Please select date"> --}}
 
-                                    <input type="text" name="to_date" id="to_date" class="form-control"
-                                        value="{{ isset($payload['to_date']) ? $payload['to_date'] : '' }}"
-                                        placeholder="Please select date">
+                                        <input type="text" name="to_date" id="to_date" class="form-control"
+                                            value="{{ isset($payload['to_date']) ? $payload['to_date'] : '' }}"
+                                            placeholder="Please select date">
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-6">
+                                    <label for="name" class="form-label w-100">&nbsp;</label>
+                                    <button type="submit" class="btn common-btn">SEARCH</button>
+                                    @can('export-search')
+                                        <a href="{{ route('export.cannes-search') }}" class="btn common-btn">
+                                            SEARCH-EXPORT</a>
+                                    @endcan
                                 </div>
                             </div>
+                        </form>
 
-                            <div class="col-lg-6">
-                                <label for="name" class="form-label w-100">&nbsp;</label>
-                                <button type="submit" class="btn common-btn">SEARCH</button>
-                                {{-- @can('ip-non_featured_download') --}}
-                                <a href="{{ route('export.cannes-search') }}" class="btn common-btn">
-                                    SEARCH-EXPORT</a>
-                                {{-- @endcan --}}
-                            </div>
+                        <div class="text-end">
+                            <a href="{{ route('cannes-entries-list') }}" class="btn common-btn">RESET</a>
+                            @can('export')
+                                <a href="{{ route('cannes-entries-export') }}" class="btn common-btn">EXPORT-ALL </a>
+                            @endcan
                         </div>
-                    </form>
-
-                    <div class="text-end">
-                        <a href="{{ route('cannes-entries-list') }}" class="btn common-btn">RESET</a>
-                        <a href="{{ route('cannes-entries-export') }}" class="btn common-btn">EXPORT-ALL </a>
                     </div>
                 </div>
             </div>
-        </div>
+        @endcan
 
         <div class="row">
             <div class="col-md-12 col-sm-12 d-flex">

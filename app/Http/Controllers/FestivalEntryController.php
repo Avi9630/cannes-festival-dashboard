@@ -29,7 +29,7 @@ class FestivalEntryController extends Controller
         if ($roleName['name'] === 'JURY') {
             $juryAssign =   JuryAssign::where(['user_id' => $this->user->id])->pluck('festival_entry_id');
             $entries    =   FestivalEntry::whereNotIn('id', $juryAssign)->orderBy('id', 'DESC')->paginate(10);
-            $count      =   FestivalEntry::whereNotIn('id', $juryAssign)->count();
+            $count      =   FestivalEntry::where('disclaimer', 1)->whereNotIn('id', $juryAssign)->count();
         } else {
             $entries            =   FestivalEntry::where('disclaimer', 1)->orderBy('id', 'DESC')->paginate(10);
             $count              =   FestivalEntry::where('disclaimer', 1)->count();
