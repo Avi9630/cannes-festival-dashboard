@@ -183,8 +183,10 @@
                                                                 <button type="submit" id="submitButton"
                                                                     class="btn btn-sm btn-info">Assign</button>
                                                             </form>
-                                                        @else
-                                                            <p style="color: blueviolet">Score submitted</p>
+                                                        @elseif($entry->stage === 1)
+                                                            <p style="color: blueviolet">Assigned to jury</p>
+                                                        @elseif($entry->stage === 2)
+                                                            <p style="color: blueviolet">Score already submitted by jury</p>
                                                         @endif
                                                     </td>
                                                 @endcan
