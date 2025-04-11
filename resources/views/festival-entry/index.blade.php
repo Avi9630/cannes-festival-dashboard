@@ -1,7 +1,7 @@
 @extends('layouts.app')
-@section('title')
-    {{ 'NFA-FEATURE-LIST' }}
-@endsection
+{{-- @section('title')
+    {{ 'NFA-FEATURE-LIST' }} --}}
+{{-- @endsection --}}
 @section('content')
     <div class="container-fluid">
 
@@ -112,12 +112,13 @@
                                 @if (count($entries) > 0)
                                     <thead>
                                         <tr>
-                                            <th>PDF</th>
+                                            {{-- <th>PDF</th> --}}
                                             {{-- <th>ZIP</th> --}}
                                             <th>Ref.No</th>
                                             <th>Name</th>
                                             <th>Email</th>
                                             <th>Mobile</th>
+                                            <th>Assign</th>
                                             {{-- <th>Film Title</th>
                                             <th>Film Title English</th>
                                             <th>Language</th> --}}
@@ -135,12 +136,12 @@
                                     <tbody>
                                         @foreach ($entries as $key => $entry)
                                             <tr>
-                                                <td>
+                                                {{-- <td>
                                                     <a href="{{ route('cannes-entries-pdf', ['id' => $entry->id]) }}"
                                                         class="text-danger" target="_blank">
                                                         <i class="ri-file-pdf-line"></i>
                                                     </a>
-                                                </td>
+                                                </td> --}}
 
                                                 {{-- <td>
                                                     <a href="{{ route('nfa-feature-zip', ['id' => $entry->id]) }}"
@@ -155,6 +156,47 @@
                                                 <td>{{ $entry->email ?? '' }}</td>
 
                                                 <td>{{ $entry->mobile ?? '' }}</td>
+
+                                                <td>{{ $entry->mobile ?? '' }}</td>
+
+                                                <td>
+                                                    {{-- @if ($cmot->stage === '0' || $cmot->stage === null) --}}
+                                                    @php
+                                                        $juryRole = Spatie\Permission\Models\Role::where(
+                                                            'name',
+                                                            'jury',
+                                                        )->first();
+                                                        $users = App\Models\User::whereHas('roles', function (
+                                                            $query,
+                                                        ) use ($juryRole) {
+                                                            $query->where('id', $juryRole->id);
+                                                        })
+                                                            // ->where(['cmot_category_id' => $cmot->category_id])
+                                                            ->get();
+                                                    @endphp
+                                                    <form action="{{ url('assign_to', $entry->id) }}" method="POST">
+                                                        @csrf @method('POST')
+                                                        <select name="user_id" id="user_id"
+                                                            class="form-select @error('user_id') is-invalid @enderror">
+                                                            <option value="" selected>Select Jury</option>
+                                                            @forelse ($users as $user)
+                                                                <option value="{{ $user->id }}"
+                                                                    {{ old('user_id') == $user->id ? 'selected' : '' }}>
+                                                                    {{ $user->name }}</option>
+                                                                </option>
+                                                            @empty
+                                                            @endforelse
+                                                        </select>
+                                                        @error('user_id')
+                                                            <span class="invalid-feedback" role="alert">
+                                                                <strong>{{ $message }}</strong>
+                                                            </span>
+                                                        @enderror
+                                                        <button type="submit" id="submitButton"
+                                                            class="btn btn-sm btn-info">Assign</button>
+                                                    </form>
+                                                    {{-- @endif --}}
+                                                </td>
 
                                                 {{-- <td>{{ $entry->film_title }}</td>
 

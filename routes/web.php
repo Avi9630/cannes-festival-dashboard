@@ -51,6 +51,7 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('cannes-entries-export-search',  'exportSearch')->name('export.cannes-search');
         Route::get('score-by/{id}',                 'score');
         Route::post('score-by/{id}',                'feedback');
+        Route::post('assign_to/{id}',               'assignTo');
     });
     Route::get('permission_search',     [PermissionController::class, 'search'])->name('permissions.search');
 });

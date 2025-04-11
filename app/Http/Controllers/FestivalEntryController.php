@@ -4,12 +4,14 @@ namespace App\Http\Controllers;
 
 use Illuminate\Database\Eloquent\Builder;
 use App\Exports\ExportFestivalEntries;
+use App\Models\Assign;
 use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Facades\Excel;
 use Spatie\Permission\Models\Role;
 use App\Models\FestivalEntry;
 use Illuminate\Http\Request;
 use App\Models\JuryAssign;
+use App\Models\User;
 
 class FestivalEntryController extends Controller
 {
@@ -46,7 +48,7 @@ class FestivalEntryController extends Controller
     {
         $festival = FestivalEntry::find($id);
         if ($this->roleName['name'] === 'SUPERADMIN') {
-            $juryAssign =   JuryAssign::where('festival_entry_id', $id)->get();
+            $juryAssign =   JuryAssign::where(['festival_entry_id' => $id,'overall_score' => ])->get();
             return view('festival-entry.show', [
                 'festival'      =>  $festival,
                 'juryScores'    =>  $juryAssign,
@@ -145,6 +147,46 @@ class FestivalEntryController extends Controller
             'count'     =>  $count,
             'payload'   =>  $payload
         ]);
+    }
+
+    public function assignTo(Request $request, $id)
+    {
+        $payload = $request->all();
+        $request->validate([
+            'user_id' => 'required|numeric',
+        ]);
+        $assignTo = [
+            'user_id'           =>  $payload['user_id'],
+            'festival_entry_id' =>  $id,
+            'assigned_by'       =>  Auth::user()->id,
+        ];
+
+        $user       =   User::find($payload['user_id']);
+        $roleName   =   Role::select('name')
+            ->where('id', $user['role_id'])
+            ->first();
+
+        if (in_array($roleName['name'], ['JURY'])) {
+
+            $checkRecords = JuryAssign::where([
+                // 'user_id' => $payload['user_id'],
+                'festival_entry_id' => $id,
+            ])->first();
+
+            if (!empty($checkRecords)) {
+                return redirect()->back()->with('warning', 'Details already assigned.!');
+            }
+            $x = JuryAssign::insert($assignTo);
+            if ($x) {
+                if ($roleName['name'] === 'JURY') {
+                    FestivalEntry::where('id', $assignTo['festival_entry_id'])->update(['stage' => FestivalEntry::Stages()['ASSIGNED_TO_JURY']]);
+                }
+                return redirect()->back()->with('success', 'Details successfully assigned.!');
+            } else {
+                return redirect()->back()->with('warning', 'Something went wrong.!');
+            }
+        }
+        return redirect()->back()->with('warning', 'Something went wrong.!');
     }
 
     public function exportAll()
