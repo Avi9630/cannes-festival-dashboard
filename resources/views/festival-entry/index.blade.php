@@ -118,18 +118,9 @@
                                             <th>Name</th>
                                             <th>Email</th>
                                             <th>Mobile</th>
-                                            <th>Assign</th>
-                                            {{-- <th>Film Title</th>
-                                            <th>Film Title English</th>
-                                            <th>Language</th> --}}
-                                            {{-- <th>Producer Name</th>
-                                            <th>Production Company</th>
-                                            <th>Screener Link</th>
-                                            <th>Film Link</th>
-                                            <th>Paswword</th>
-                                            <th>Director Name</th>
-                                            <th>Synopsis</th>
-                                            <th>Director Bio</th> --}}
+                                            @can('assign')
+                                                <th>Assign</th>
+                                            @endcan
                                             <th>Action</th>
                                         </tr>
                                     </thead>
@@ -157,68 +148,46 @@
 
                                                 <td>{{ $entry->mobile ?? '' }}</td>
 
-                                                <td>{{ $entry->mobile ?? '' }}</td>
-
-                                                <td>
-                                                    {{-- @if ($cmot->stage === '0' || $cmot->stage === null) --}}
-                                                    @php
-                                                        $juryRole = Spatie\Permission\Models\Role::where(
-                                                            'name',
-                                                            'jury',
-                                                        )->first();
-                                                        $users = App\Models\User::whereHas('roles', function (
-                                                            $query,
-                                                        ) use ($juryRole) {
-                                                            $query->where('id', $juryRole->id);
-                                                        })
-                                                            // ->where(['cmot_category_id' => $cmot->category_id])
-                                                            ->get();
-                                                    @endphp
-                                                    <form action="{{ url('assign_to', $entry->id) }}" method="POST">
-                                                        @csrf @method('POST')
-                                                        <select name="user_id" id="user_id"
-                                                            class="form-select @error('user_id') is-invalid @enderror">
-                                                            <option value="" selected>Select Jury</option>
-                                                            @forelse ($users as $user)
-                                                                <option value="{{ $user->id }}"
-                                                                    {{ old('user_id') == $user->id ? 'selected' : '' }}>
-                                                                    {{ $user->name }}</option>
-                                                                </option>
-                                                            @empty
-                                                            @endforelse
-                                                        </select>
-                                                        @error('user_id')
-                                                            <span class="invalid-feedback" role="alert">
-                                                                <strong>{{ $message }}</strong>
-                                                            </span>
-                                                        @enderror
-                                                        <button type="submit" id="submitButton"
-                                                            class="btn btn-sm btn-info">Assign</button>
-                                                    </form>
-                                                    {{-- @endif --}}
-                                                </td>
-
-                                                {{-- <td>{{ $entry->film_title }}</td>
-
-                                                <td>{{ $entry->film_title_english }}</td>
-
-                                                <td>{{ $entry->LANGUAGE }}</td> --}}
-
-                                                {{-- <td>{{ $entry->producer_name ?? '' }}</td>
-
-                                                <td>{{ $entry->production_company ?? '' }}</td>
-
-                                                <td>{{ $entry->screener_link ?? '' }}</td>
-
-                                                <td>{{ $entry->film_link ?? '' }}</td>
-
-                                                <td>{{ $entry->PASSWORD ?? '' }}</td>
-
-                                                <td>{{ $entry->director_name ?? '' }}</td>
-
-                                                <td>{{ $entry->synopsis ?? '' }}</td>
-
-                                                <td>{{ $entry->director_bio ?? '' }}</td> --}}
+                                                @can('assign')
+                                                    <td>
+                                                        @if ($entry->stage === '0' || $entry->stage === null)
+                                                            @php
+                                                                $juryRole = Spatie\Permission\Models\Role::where(
+                                                                    'name',
+                                                                    'jury',
+                                                                )->first();
+                                                                $users = App\Models\User::whereHas('roles', function (
+                                                                    $query,
+                                                                ) use ($juryRole) {
+                                                                    $query->where('id', $juryRole->id);
+                                                                })->get();
+                                                            @endphp
+                                                            <form action="{{ url('assign_to', $entry->id) }}" method="POST">
+                                                                @csrf @method('POST')
+                                                                <select name="user_id" id="user_id"
+                                                                    class="form-select @error('user_id') is-invalid @enderror">
+                                                                    <option value="" selected>Select Jury</option>
+                                                                    @forelse ($users as $user)
+                                                                        <option value="{{ $user->id }}"
+                                                                            {{ old('user_id') == $user->id ? 'selected' : '' }}>
+                                                                            {{ $user->name }}</option>
+                                                                        </option>
+                                                                    @empty
+                                                                    @endforelse
+                                                                </select>
+                                                                @error('user_id')
+                                                                    <span class="invalid-feedback" role="alert">
+                                                                        <strong>{{ $message }}</strong>
+                                                                    </span>
+                                                                @enderror
+                                                                <button type="submit" id="submitButton"
+                                                                    class="btn btn-sm btn-info">Assign</button>
+                                                            </form>
+                                                        @else
+                                                            <p style="color: blueviolet">Score submitted</p>
+                                                        @endif
+                                                    </td>
+                                                @endcan
                                                 <td>
                                                     @can('view')
                                                         <a href="{{ route('cannes-entries.view', $entry->id) }}">
