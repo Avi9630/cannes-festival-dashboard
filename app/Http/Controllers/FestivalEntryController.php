@@ -29,18 +29,13 @@ class FestivalEntryController extends Controller
             return redirect()->back()->with('warning', 'Role not valid.!!');
         }
         if ($roleName['name'] === 'JURY') {
-
             $juryAssignIds = JuryAssign::where('user_id', $this->user->id)
                 ->pluck('festival_entry_id')
                 ->toArray();
-
             $entries = FestivalEntry::whereIn('id', $juryAssignIds)
                 ->where('stage', 1)
                 ->orderBy('id', 'DESC')
                 ->paginate(10);
-            // $juryAssign =   JuryAssign::where(['user_id' => $this->user->id])->pluck('festival_entry_id');
-            // $entries    =   FestivalEntry::whereNotIn('id', $juryAssign)->orderBy('id', 'DESC')->paginate(10);
-            // $count      =   FestivalEntry::where('disclaimer', 1)->whereNotIn('id', $juryAssignIds)->count();
             $count      =   $entries->count();
         } else {
             $entries            =   FestivalEntry::where('disclaimer', 1)->orderBy('id', 'DESC')->paginate(10);
@@ -61,7 +56,6 @@ class FestivalEntryController extends Controller
             $juryAssign = JuryAssign::where('festival_entry_id', $id)
                 ->whereNotNull('overall_score')
                 ->get();
-            // $juryAssign =   JuryAssign::where(['festival_entry_id' => $id])->where('overall_score', '!=', NULL)->get();
             return view('festival-entry.show', [
                 'festival'      =>  $festival,
                 'juryScores'    =>  $juryAssign,
@@ -178,7 +172,6 @@ class FestivalEntryController extends Controller
         if (in_array($roleName['name'], ['JURY'])) {
 
             $checkRecords = JuryAssign::where([
-                // 'user_id' => $payload['user_id'],
                 'festival_entry_id' => $id,
             ])->first();
 
