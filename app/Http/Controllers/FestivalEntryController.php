@@ -48,7 +48,7 @@ class FestivalEntryController extends Controller
     {
         $festival = FestivalEntry::find($id);
         if ($this->roleName['name'] === 'SUPERADMIN') {
-            $juryAssign =   JuryAssign::where(['festival_entry_id' => $id,'overall_score' => ])->get();
+            $juryAssign =   JuryAssign::where(['festival_entry_id' => $id])->get();
             return view('festival-entry.show', [
                 'festival'      =>  $festival,
                 'juryScores'    =>  $juryAssign,
