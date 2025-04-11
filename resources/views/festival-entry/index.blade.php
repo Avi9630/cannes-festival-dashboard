@@ -186,7 +186,7 @@
                                                         @elseif($entry->stage === 1)
                                                             <p style="color: blueviolet">Assigned to jury</p>
                                                         @elseif($entry->stage === 2)
-                                                            <p style="color: blueviolet">Score already submitted by jury</p>
+                                                            <p style="color: blueviolet">Score submitted by jury</p>
                                                         @endif
                                                     </td>
                                                 @endcan
