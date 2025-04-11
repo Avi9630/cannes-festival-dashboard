@@ -56,8 +56,8 @@
                                                 <td> {{ $score->id }} </td>
                                                 <td> {{ $score->festival_entry_id }} </td>
                                                 <td> {{ $score->user->name ?? '' }} </td>
-                                                <td> {{ $score->overall_score ?? '' }} </td>
-                                                <td> {{ $score->feedback ?? '' }} </td>
+                                                <td> {{ $score->overall_score ?? 'Pending By you' }} </td>
+                                                <td> {{ $score->feedback ?? 'Pending By you' }} </td>
                                             </tr>
                                         @endforeach
                                     </tbody>
