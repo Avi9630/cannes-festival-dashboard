@@ -32,43 +32,76 @@
                         </div>
                     </div>
                 </div>
-            @elseif(Auth::user()->hasRole('JURY'))
-                <div class="col-md-12 col-sm-12 d-flex">
-                    <div class="card card-animate w-100 ">
-                        <div class="card-header">
-                            <h4 class="card-title mb-0">Scores by you</h4>
-                        </div>
-                        <div class="card-body">
-                            @if (isset($scoreByJury) && !empty($scoreByJury))
-                                <table class="table custom-table">
-                                    <thead>
-                                        <tr>
-                                            <th>Ref.No</th>
-                                            <th>Cannes ID</th>
-                                            <th>Jury Name</th>
-                                            <th>Overall Score</th>
-                                            <th>Feedback</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @foreach ($scoreByJury as $key => $score)
+                <div class="col-md-4"></div>
+                <div class="col-md-4">
+                    <canvas id="paymentChart" width="400" height="200"></canvas>
+                    {{-- <canvas id="paymentBarChart" height="120"></canvas> --}}
+                    <div class="col-md-4"></div>
+                @elseif(Auth::user()->hasRole('JURY'))
+                    <div class="col-md-12 col-sm-12 d-flex">
+                        <div class="card card-animate w-100 ">
+                            <div class="card-header">
+                                <h4 class="card-title mb-0">Scores by you</h4>
+                            </div>
+                            <div class="card-body">
+                                @if (isset($scoreByJury) && !empty($scoreByJury))
+                                    <table class="table custom-table">
+                                        <thead>
                                             <tr>
-                                                <td> {{ $score->id }} </td>
-                                                <td> {{ $score->festival_entry_id }} </td>
-                                                <td> {{ $score->user->name ?? '' }} </td>
-                                                <td> {{ $score->overall_score ?? 'Pending By you' }} </td>
-                                                <td> {{ $score->feedback ?? 'Pending By you' }} </td>
+                                                <th>Ref.No</th>
+                                                <th>Cannes ID</th>
+                                                <th>Jury Name</th>
+                                                <th>Overall Score</th>
+                                                <th>Feedback</th>
                                             </tr>
-                                        @endforeach
-                                    </tbody>
-                                </table>
-                            @endif
+                                        </thead>
+                                        <tbody>
+                                            @foreach ($scoreByJury as $key => $score)
+                                                <tr>
+                                                    <td> {{ $score->id }} </td>
+                                                    <td> {{ $score->festival_entry_id }} </td>
+                                                    <td> {{ $score->user->name ?? '' }} </td>
+                                                    <td> {{ $score->overall_score ?? 'Pending By you' }} </td>
+                                                    <td> {{ $score->feedback ?? 'Pending By you' }} </td>
+                                                </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                @endif
+                            </div>
                         </div>
                     </div>
-                </div>
-            @else
-                <h1>You don't have access to see this dashboard....</h1>
+                @else
+                    <h1>You don't have access to see this dashboard....</h1>
             @endif
         </div>
     </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        const ctx = document.getElementById('paymentChart').getContext('2d');
+        const paymentChart = new Chart(ctx, {
+            type: 'doughnut', // You can use 'bar', 'pie', 'doughnut'
+            data: {
+                labels: ['Scored', 'Assigned'],
+                datasets: [{
+                    label: 'Entry Status',
+                    data: [{{ isset($scored) ?? '' }}, {{ $assigned ?? '' }}],
+                    backgroundColor: ['#28a745', '#dc3545'],
+                    borderColor: ['#28a745', '#dc3545'],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                    },
+                }
+            }
+        });
+    </script>
+
+
 @endsection
