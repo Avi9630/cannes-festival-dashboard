@@ -104,7 +104,7 @@
                         </div>
                         <br>
                     </div>
-                    @if (Auth::check() && Auth::user()->hasRole('SUPERADMIN'))
+                    @if ((Auth::check() && Auth::user()->hasRole('SUPERADMIN')) || Auth::user()->hasRole('ADMIN'))
                         <div class="card">
                             <div class="card-header">
                                 <h4 class="card-title">JURY SCORES</h4>
