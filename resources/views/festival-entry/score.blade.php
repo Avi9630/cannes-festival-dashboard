@@ -22,7 +22,9 @@
                         </div>
 
                         <div class="card-body">
-                            <br>
+                            <p style="background-color: yellow">Please note that the grading shall happen based on the
+                                following parameters- Technical
+                                Competence, Creative Prowess, Originality of the Story, Overall Craftsmanship</p>
 
                             <form id="reviewForm" action="{{ url('score-by', $festival->id) }}" method="POST">
                                 @csrf @method('POST')

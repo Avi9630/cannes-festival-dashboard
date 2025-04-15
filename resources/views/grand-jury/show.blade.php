@@ -113,6 +113,10 @@
                                 <h4 class="card-title">JURY SCORES</h4>
                             </div>
                             <div class="card-body">
+                                <p style="background-color: yellow">Would you recommend these films for market screening at
+                                    Marche du Film,
+                                    Cannes Film Festival?</p>
+
                                 <div class="card">
                                     <div class="card-body">
                                         <div class="row pt-2">
@@ -133,7 +137,7 @@
                                                                 <td> {{ $score->feedback ?? '' }} </td>
                                                                 <td>
                                                                     <a href="{{ route('selected-by-grand', $score->festival_entry_id) }}"
-                                                                        class="btn btn-sm btn-primary">
+                                                                        class="btn btn-sm btn-primary" title="">
                                                                         Select
                                                                     </a>
                                                                 </td>
