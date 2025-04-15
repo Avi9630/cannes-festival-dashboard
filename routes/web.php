@@ -4,6 +4,7 @@ use App\Http\Controllers\FestivalEntryController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\WelcomeController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\GrandJuryController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
@@ -53,6 +54,22 @@ Route::group(['middleware' => 'auth'], function () {
         Route::post('score-by/{id}',                'feedback');
         Route::post('assign_to/{id}',               'assignTo');
     });
+
+    Route::controller(GrandJuryController::class)->group(function () {
+        Route::get('cannes-selected-list',           'index')->name('cannes-selected-list');
+        // Route::get('cannes-entries-search',         'search')->name('cannes-entries-search');
+        Route::get('cannes-selected-view/{id}',     'view')->name('cannes-selected-view');
+        Route::get('selected-by-grand/{id}',        'selectedBy')->name('selected-by-grand');
+        // Route::get('cannes-entries-delete/{id}',    'destroy')->name('cannes-entries.delete');
+        // Route::get('cannes-entries-delete/{id}',    'destroy')->name('cannes-entries.delete');
+        // Route::get('cannes-entries/pdf/{id}',       'cannesPdf')->name('cannes-entries-pdf');
+        // Route::get('cannes-entries-export',         'exportAll')->name('cannes-entries-export');
+        // Route::get('cannes-entries-export-search',  'exportSearch')->name('export.cannes-search');
+        // Route::get('score-by/{id}',                 'score');
+        // Route::post('score-by/{id}',                'feedback');
+        // Route::post('assign_to/{id}',               'assignTo');
+    });
+
     Route::get('permission_search',     [PermissionController::class, 'search'])->name('permissions.search');
 });
 

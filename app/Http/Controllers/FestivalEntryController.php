@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use Illuminate\Database\Eloquent\Builder;
 use App\Exports\ExportFestivalEntries;
-use App\Models\Assign;
 use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Facades\Excel;
 use Spatie\Permission\Models\Role;

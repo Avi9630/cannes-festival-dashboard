@@ -94,23 +94,24 @@
                             </li>
                         @endcan
 
-                        {{-- @can('nfa-non-feature')
+                        @can('cannes-selected-list')
                             <li class="nav-item">
                                 <a class="nav-link menu-link" href="#nfaNonFeature" data-bs-toggle="collapse" role="button"
                                     aria-expanded="false" aria-controls="indianPanoroma">
-                                    <i class="ri-flag-2-line"></i> <span data-key="">NFA-NON-FEATURE</span>
+                                    <i class="ri-flag-2-line"></i> <span data-key="">CANNES SELECTED ENTRIES</span>
                                 </a>
                                 <div class="collapse menu-dropdown" id="nfaNonFeature">
                                     <ul class="nav nav-sm flex-column">
                                         <li class="nav-item">
-                                            <a href="{{ route('nfa-non-feature') }}" class="nav-link" data-key="">LIST</a>
+                                            <a href="{{ route('cannes-selected-list') }}" class="nav-link"
+                                                data-key="">LIST</a>
                                         </li>
                                     </ul>
                                 </div>
                             </li>
                         @endcan
 
-                        @can('nfa-best-book')
+                        {{-- @can('nfa-best-book')
                             <li class="nav-item">
                                 <a class="nav-link menu-link" href="#nfaBestBook" data-bs-toggle="collapse" role="button"
                                     aria-expanded="false" aria-controls="indianPanoroma">

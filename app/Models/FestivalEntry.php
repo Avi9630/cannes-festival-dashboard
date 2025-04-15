@@ -12,6 +12,7 @@ class FestivalEntry extends Model
 {
     use HasFactory, COMMONTrait;
     protected $table = 'festival_entries';
+    protected $guarded  =   [];
 
     public function client()
     {
@@ -93,8 +94,8 @@ class FestivalEntry extends Model
         return [
             'ASSIGNED_TO_JURY'              =>  1,
             'FEEDBACK_GIVEN_BY_JURY'        =>  2,
-            'ASSIGNED_TO_GRAND_JURY'        =>  3,
-            'FEEDBACK_GIVEN_BY_GRAND_JURY'  =>  4,
+            'SELECTED_BY_GRAND_JURY'        =>  3,
+            // 'FEEDBACK_GIVEN_BY_GRAND_JURY'  =>  4,
         ];
     }
 
