@@ -139,7 +139,7 @@
                                                                     <td>
                                                                         <a href="{{ route('final-select', $score->festival_entry_id) }}"
                                                                             class="btn btn-sm btn-primary" title="">
-                                                                            Select
+                                                                            Final select
                                                                         </a>
                                                                     </td>
                                                                 @endcan

@@ -57,8 +57,8 @@ Route::group(['middleware' => 'auth'], function () {
     
     Route::controller(GrandJuryController::class)->group(function () {
         Route::get('scored-entries',            'scoredEntry')->name('scored-entries');
+        Route::get('scored-entries-view/{id}',  'view')->name('scored-entries-view');
         Route::get('cannes-selected-list',      'index')->name('cannes-selected-list');
-        Route::get('cannes-selected-view/{id}', 'view')->name('cannes-selected-view');
         Route::get('final-select/{id}',         'finalSelect')->name('final-select');
         Route::post('assign-to-level2/{id}',    'assignTo');
         

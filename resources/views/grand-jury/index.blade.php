@@ -10,7 +10,7 @@
 
                     <div class="card-header">
                         <h4 class="card-title mb-0 project-title">
-                            CANNES ENTRIES (COUNT :- {{ isset($count) ? $count : '' }})
+                            LEVEL-1 SCORED ENTRIES (COUNT :- {{ isset($count) ? $count : '' }})
                         </h4>
                     </div>
 
@@ -45,17 +45,19 @@
                                     </thead>
                                     <tbody>
                                         @foreach ($entries as $key => $entry)
+                                        {{-- @php
+                                            dd($entry);
+                                        @endphp --}}
                                             <tr>
                                                 <td> {{ $entry->id }} </td>
                                                 <td> {{ $entry->NAME ?? '' }} </td>
                                                 <td>{{ $entry->email ?? '' }}</td>
                                                 <td>{{ $entry->mobile ?? '' }}</td>
-                                                @php
-                                                    // dd($entry);
-                                                @endphp
+
                                                 @can('assign')
                                                     <td>
                                                         @if ($entry->stage === 3)
+
                                                             @php
                                                                 $juryRole = Spatie\Permission\Models\Role::where(
                                                                     'name',
@@ -67,6 +69,7 @@
                                                                     $query->where('id', $juryRole->id);
                                                                 })->get();
                                                             @endphp
+                                                            
                                                             <form action="{{ url('assign-to-level2', $entry->id) }}" method="POST">
                                                                 @csrf @method('POST')
                                                                 <select name="user_id" id="user_id"
@@ -88,29 +91,22 @@
                                                                 <button type="submit" id="submitButton"
                                                                     class="btn btn-sm btn-info">Assign</button>
                                                             </form>
-                                                        @elseif($entry->stage === 4)
+                                                        {{-- @elseif($entry->stage === 4)
                                                             <p style="color: blueviolet">Assigned to Level2</p>
                                                         @elseif($entry->stage === 5)
-                                                            <p style="color: blueviolet">Score submitted by Level2</p>
+                                                            <p style="color: blueviolet">Score submitted by Level2</p> --}}
                                                         @endif
                                                     </td>
                                                 @endcan
 
-                                                {{-- <td>
-                                                    @if ($entry->stage === 3)
-                                                        <button class="btn btn-sm btn-info" disabled>Selected</button>
-                                                    @endif
-                                                </td> --}}
                                                 <td>
-
                                                     @can('view')
                                                         @if ($entry->stage != 3)
-                                                            <a href="{{ route('cannes-selected-view', $entry->id) }}">
+                                                            <a href="{{ route('scored-entries-view', $entry->id) }}">
                                                                 <i class="ri-eye-fill black-text"></i>
                                                             </a>
                                                         @endif
                                                     @endcan
-
                                                 </td>
                                             </tr>
                                         @endforeach
@@ -120,14 +116,6 @@
                                 @endif
                             </table>
                         </div>
-
-                        <!-- Pagination -->
-                        {{-- <nav aria-label="...">
-                            <ul class="pagination">
-                                {{ $entries->withQueryString()->links() }}
-                            </ul>
-                        </nav> --}}
-                        <!-- Pagination End-->
 
                     </div>
                 </div>

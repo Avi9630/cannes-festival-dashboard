@@ -37,8 +37,8 @@ class GrandJuryController extends Controller
                 ->paginate(10);
             $count      =   $entries->count();
         } else {
-            $entries = FestivalEntry::whereNotNull('stage')->whereIn('stage', [3])->orderBy('id', 'DESC')->get();
-            $count              =   $entries->count();
+            $entries    =   FestivalEntry::whereNotNull('stage')->whereIn('stage', [3])->orderBy('id', 'DESC')->get();
+            $count      =   $entries->count();
         }
         
         return view('grand-jury.index', [
@@ -56,23 +56,8 @@ class GrandJuryController extends Controller
         if($roleName['name'] !=  'SUPERADMIN' && $roleName['name'] !=  'ADMIN'){
             return redirect()->route('cannes-entries-list')->with('warning', 'Role not valid.!!');
         }
-
-        // if ($roleName['name'] === 'JURY') {
-        //     $juryAssignIds = JuryAssign::where('user_id', $this->user->id)
-        //         ->pluck('festival_entry_id')
-        //         ->toArray();
-        //     $entries = FestivalEntry::whereIn('id', $juryAssignIds)
-        //         ->where('stage', 1)
-        //         ->orderBy('id', 'DESC')
-        //         ->paginate(10);
-        //     $count      =   $entries->count();
-        // } else {
-        //     $entries = FestivalEntry::whereNotNull('stage')->whereIn('stage', [2])->orderBy('id', 'DESC')->get();
-        //     $count              =   $entries->count();
-        // }
-        $entries = FestivalEntry::whereNotNull('stage')->whereIn('stage', [2])->orderBy('id', 'DESC')->get();
-        $count              =   $entries->count();
-        
+        $entries    =   FestivalEntry::whereNotNull('stage')->whereIn('stage', [2])->orderBy('id', 'DESC')->get();
+        $count      =   $entries->count();        
         return view('grand-jury.index', [
             'entries' => $entries,
             'count' => $count,
@@ -108,7 +93,7 @@ class GrandJuryController extends Controller
     {
         $festivalEntry = FestivalEntry::where(['id' => $id])->first();
         $festivalEntry->update(['stage' => FestivalEntry::Stages()['FINAL_SELECT_FOR_LEVEL2']]);
-        return redirect()->route('cannes-selected-list')->with('success', 'Selection done.!!');
+        return redirect()->route('scored-entries')->with('success', 'Selection done.!!');
     }
 
     public function assignTo(Request $request, $id)

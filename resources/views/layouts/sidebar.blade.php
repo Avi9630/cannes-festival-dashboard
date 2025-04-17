@@ -90,14 +90,10 @@
                                         </li>
                                         @hasanyrole('ADMIN|SUPERADMIN')
                                             <li class="nav-item">
-                                                <a href="{{ route('scored-entries') }}" class="nav-link" data-key="">SCORED
-                                                    ENTRIES By LEVEL1</a>
+                                                <a href="{{ route('scored-entries') }}" class="nav-link" data-key="">
+                                                    SCORE SUBMITTED By LEVEL1</a>
                                             </li>
                                         @endhasanyrole
-                                        {{-- <li class="nav-item">
-                                            <a href="{{ route('scored-entries') }}" class="nav-link" data-key="">SCORED
-                                                ENTRIES By LEVEL1</a>
-                                        </li> --}}
                                     </ul>
                                 </div>
                             </li>

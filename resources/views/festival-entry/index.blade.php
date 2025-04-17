@@ -150,7 +150,7 @@
 
                                                 @can('assign')
                                                     <td>
-                                                        @if ($entry->stage === 1 || $entry->stage === null)
+                                                        @if ($entry->stage === 0 || $entry->stage === null)
                                                             @php
                                                                 $juryRole = Spatie\Permission\Models\Role::where(
                                                                     'name',
@@ -184,11 +184,11 @@
                                                                     class="btn btn-sm btn-info">Assign</button>
                                                             </form>
                                                         @elseif($entry->stage === 1)
-                                                            <p style="color: blueviolet">Assigned to jury</p>
+                                                            <p style="color: blueviolet">Assigned to Level1</p>
                                                         @elseif($entry->stage === 2)
-                                                            <p style="color: blueviolet">Score submitted by jury</p>
+                                                            <p style="color: blueviolet">Score submitted by Level1</p>
                                                         @elseif($entry->stage === 3)
-                                                            <p style="color: blueviolet">Final selection for level1</p>
+                                                            <p style="color: blueviolet">Added to final selection list</p>
                                                         @elseif($entry->stage === 4)
                                                             <p style="color: blueviolet">Assigned to level2</p>
                                                         @elseif($entry->stage === 5)

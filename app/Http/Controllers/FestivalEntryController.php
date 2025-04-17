@@ -10,6 +10,7 @@ use Spatie\Permission\Models\Role;
 use App\Models\FestivalEntry;
 use Illuminate\Http\Request;
 use App\Models\JuryAssign;
+use App\Models\Level2Assign;
 use App\Models\User;
 
 class FestivalEntryController extends Controller
@@ -52,12 +53,16 @@ class FestivalEntryController extends Controller
     {
         $festival = FestivalEntry::find($id);
         if ($this->roleName['name'] === 'SUPERADMIN' || $this->roleName['name'] === 'ADMIN') {
-            $juryAssign = JuryAssign::where('festival_entry_id', $id)
+            $level1Score = JuryAssign::where('festival_entry_id', $id)
+                ->whereNotNull('overall_score')
+                ->get();
+            $level2Score = Level2Assign::where('festival_entry_id', $id)
                 ->whereNotNull('overall_score')
                 ->get();
             return view('festival-entry.show', [
                 'festival'      =>  $festival,
-                'juryScores'    =>  $juryAssign,
+                'juryScores'    =>  $level1Score,
+                'level2Scores'  =>  $level2Score,
             ]);
         } else {
             return view('festival-entry.show', [
