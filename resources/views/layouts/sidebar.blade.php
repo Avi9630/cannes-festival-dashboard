@@ -86,13 +86,18 @@
                                 <div class="collapse menu-dropdown" id="nfaFeature">
                                     <ul class="nav nav-sm flex-column">
                                         <li class="nav-item">
-                                            <a href="{{ route('cannes-entries-list') }}" class="nav-link"
-                                                data-key="">ALL</a>
+                                            <a href="{{ route('cannes-entries-list') }}" class="nav-link" data-key="">ALL</a>
                                         </li>
-                                        <li class="nav-item">
-                                            <a href="{{ route('scored-entries') }}" class="nav-link"
-                                                data-key="">SCORED ENTRIES By LEVEL1</a>
-                                        </li>
+                                        @hasanyrole('ADMIN|SUPERADMIN')
+                                            <li class="nav-item">
+                                                <a href="{{ route('scored-entries') }}" class="nav-link" data-key="">SCORED
+                                                    ENTRIES By LEVEL1</a>
+                                            </li>
+                                        @endhasanyrole
+                                        {{-- <li class="nav-item">
+                                            <a href="{{ route('scored-entries') }}" class="nav-link" data-key="">SCORED
+                                                ENTRIES By LEVEL1</a>
+                                        </li> --}}
                                     </ul>
                                 </div>
                             </li>
@@ -117,8 +122,8 @@
 
                         @can('level2-permission')
                             <li class="nav-item">
-                                <a class="nav-link menu-link" href="#level2-permission" data-bs-toggle="collapse" role="button"
-                                    aria-expanded="false" aria-controls="indianPanoroma">
+                                <a class="nav-link menu-link" href="#level2-permission" data-bs-toggle="collapse"
+                                    role="button" aria-expanded="false" aria-controls="indianPanoroma">
                                     <i class="ri-flag-2-line"></i> <span data-key="">LEVEL2 ENTRIES</span>
                                 </a>
                                 <div class="collapse menu-dropdown" id="level2-permission">
@@ -131,40 +136,6 @@
                                 </div>
                             </li>
                         @endcan
-
-                        {{-- @can('nfa-best-book')
-                            <li class="nav-item">
-                                <a class="nav-link menu-link" href="#nfaBestBook" data-bs-toggle="collapse" role="button"
-                                    aria-expanded="false" aria-controls="indianPanoroma">
-                                    <i class="ri-flag-2-line"></i> <span data-key="">BEST BOOK ON CINEMA</span>
-                                </a>
-                                <div class="collapse menu-dropdown" id="nfaBestBook">
-                                    <ul class="nav nav-sm flex-column">
-                                        <li class="nav-item">
-                                            <a href="{{ route('best-book-cinema') }}" class="nav-link"
-                                                data-key="">LIST</a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </li>
-                        @endcan
-
-                        @can('nfa-best-film-critic')
-                            <li class="nav-item">
-                                <a class="nav-link menu-link" href="#nfaBestFilmCritic" data-bs-toggle="collapse"
-                                    role="button" aria-expanded="false" aria-controls="indianPanoroma">
-                                    <i class="ri-flag-2-line"></i> <span data-key="">BEST FILM CRITIC</span>
-                                </a>
-                                <div class="collapse menu-dropdown" id="nfaBestFilmCritic">
-                                    <ul class="nav nav-sm flex-column">
-                                        <li class="nav-item">
-                                            <a href="{{ route('best-film-critic') }}" class="nav-link"
-                                                data-key="">LIST</a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </li>
-                        @endcan --}}
                     @else
                         <li class="nav-item">
                             <a class="nav-link menu-link" href="{{ url('/') }}">
