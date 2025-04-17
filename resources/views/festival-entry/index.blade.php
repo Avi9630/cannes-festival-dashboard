@@ -150,7 +150,7 @@
 
                                                 @can('assign')
                                                     <td>
-                                                        @if ($entry->stage === '0' || $entry->stage === null)
+                                                        @if ($entry->stage === 1 || $entry->stage === null)
                                                             @php
                                                                 $juryRole = Spatie\Permission\Models\Role::where(
                                                                     'name',
@@ -187,6 +187,12 @@
                                                             <p style="color: blueviolet">Assigned to jury</p>
                                                         @elseif($entry->stage === 2)
                                                             <p style="color: blueviolet">Score submitted by jury</p>
+                                                        @elseif($entry->stage === 3)
+                                                            <p style="color: blueviolet">Final selection for level1</p>
+                                                        @elseif($entry->stage === 4)
+                                                            <p style="color: blueviolet">Assigned to level2</p>
+                                                        @elseif($entry->stage === 5)
+                                                            <p style="color: blueviolet">Score submitted by level2</p>
                                                         @endif
                                                     </td>
                                                 @endcan

@@ -87,7 +87,11 @@
                                     <ul class="nav nav-sm flex-column">
                                         <li class="nav-item">
                                             <a href="{{ route('cannes-entries-list') }}" class="nav-link"
-                                                data-key="">LIST</a>
+                                                data-key="">ALL</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a href="{{ route('scored-entries') }}" class="nav-link"
+                                                data-key="">SCORED ENTRIES By LEVEL1</a>
                                         </li>
                                     </ul>
                                 </div>
@@ -104,6 +108,23 @@
                                     <ul class="nav nav-sm flex-column">
                                         <li class="nav-item">
                                             <a href="{{ route('cannes-selected-list') }}" class="nav-link"
+                                                data-key="">LIST</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </li>
+                        @endcan
+
+                        @can('level2-permission')
+                            <li class="nav-item">
+                                <a class="nav-link menu-link" href="#level2-permission" data-bs-toggle="collapse" role="button"
+                                    aria-expanded="false" aria-controls="indianPanoroma">
+                                    <i class="ri-flag-2-line"></i> <span data-key="">LEVEL2 ENTRIES</span>
+                                </a>
+                                <div class="collapse menu-dropdown" id="level2-permission">
+                                    <ul class="nav nav-sm flex-column">
+                                        <li class="nav-item">
+                                            <a href="{{ route('cannes-level2-list') }}" class="nav-link"
                                                 data-key="">LIST</a>
                                         </li>
                                     </ul>

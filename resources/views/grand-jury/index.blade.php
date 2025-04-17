@@ -37,7 +37,9 @@
                                             <th>Name</th>
                                             <th>Email</th>
                                             <th>Mobile</th>
-                                            <th>Selected</th>
+                                            @can('assign')
+                                                <th>Assign</th>
+                                            @endcan
                                             <th>Action</th>
                                         </tr>
                                     </thead>
@@ -48,12 +50,59 @@
                                                 <td> {{ $entry->NAME ?? '' }} </td>
                                                 <td>{{ $entry->email ?? '' }}</td>
                                                 <td>{{ $entry->mobile ?? '' }}</td>
-                                                <td>
+                                                @php
+                                                    // dd($entry);
+                                                @endphp
+                                                @can('assign')
+                                                    <td>
+                                                        @if ($entry->stage === 3)
+                                                            @php
+                                                                $juryRole = Spatie\Permission\Models\Role::where(
+                                                                    'name',
+                                                                    'jury',
+                                                                )->first();
+                                                                $users = App\Models\User::whereHas('roles', function (
+                                                                    $query,
+                                                                ) use ($juryRole) {
+                                                                    $query->where('id', $juryRole->id);
+                                                                })->get();
+                                                            @endphp
+                                                            <form action="{{ url('assign-to-level2', $entry->id) }}" method="POST">
+                                                                @csrf @method('POST')
+                                                                <select name="user_id" id="user_id"
+                                                                    class="form-select @error('user_id') is-invalid @enderror">
+                                                                    <option value="" selected>Select Jury</option>
+                                                                    @forelse ($users as $user)
+                                                                        <option value="{{ $user->id }}"
+                                                                            {{ old('user_id') == $user->id ? 'selected' : '' }}>
+                                                                            {{ $user->name }}</option>
+                                                                        </option>
+                                                                    @empty
+                                                                    @endforelse
+                                                                </select>
+                                                                @error('user_id')
+                                                                    <span class="invalid-feedback" role="alert">
+                                                                        <strong>{{ $message }}</strong>
+                                                                    </span>
+                                                                @enderror
+                                                                <button type="submit" id="submitButton"
+                                                                    class="btn btn-sm btn-info">Assign</button>
+                                                            </form>
+                                                        @elseif($entry->stage === 4)
+                                                            <p style="color: blueviolet">Assigned to Level2</p>
+                                                        @elseif($entry->stage === 5)
+                                                            <p style="color: blueviolet">Score submitted by Level2</p>
+                                                        @endif
+                                                    </td>
+                                                @endcan
+
+                                                {{-- <td>
                                                     @if ($entry->stage === 3)
                                                         <button class="btn btn-sm btn-info" disabled>Selected</button>
                                                     @endif
-                                                </td>
+                                                </td> --}}
                                                 <td>
+
                                                     @can('view')
                                                         @if ($entry->stage != 3)
                                                             <a href="{{ route('cannes-selected-view', $entry->id) }}">
@@ -61,6 +110,7 @@
                                                             </a>
                                                         @endif
                                                     @endcan
+
                                                 </td>
                                             </tr>
                                         @endforeach
@@ -72,11 +122,11 @@
                         </div>
 
                         <!-- Pagination -->
-                        <nav aria-label="...">
+                        {{-- <nav aria-label="...">
                             <ul class="pagination">
                                 {{ $entries->withQueryString()->links() }}
                             </ul>
-                        </nav>
+                        </nav> --}}
                         <!-- Pagination End-->
 
                     </div>

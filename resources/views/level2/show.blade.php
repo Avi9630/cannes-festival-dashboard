@@ -4,25 +4,25 @@
         <div class="content-wrapper">
             <div class="row">
                 <div class="col-lg-12 stretch-card">
-                    {{-- <div class="card"> --}}
+                    <div class="card">
 
-                    @foreach (['success', 'info', 'danger', 'warning'] as $msg)
-                        @if (Session::has($msg))
-                            <div id="flash-message" class="alert alert-{{ $msg }}" role="alert">
-                                {{ Session::get($msg) }}
-                            </div>
-                        @endif
-                    @endforeach
+                        @foreach (['success', 'info', 'danger', 'warning'] as $msg)
+                            @if (Session::has($msg))
+                                <div id="flash-message" class="alert alert-{{ $msg }}" role="alert">
+                                    {{ Session::get($msg) }}
+                                </div>
+                            @endif
+                        @endforeach
 
-                    {{-- <div class="card-header">
+                        <div class="card-header">
                             <div class="float-end">
                                 <a href="{{ route('cannes-entries-list') }}" class="btn btn-sm btn-warning">&larr; Back</a>
                             </div>
                             <h4 class="card-title">PREVIEW</h4>
-                        </div> --}}
+                        </div>
 
-                    {{-- <div class="card-body">
-                            <div class="card">
+                        <div class="card-body">
+                            {{-- <div class="card">
                                 <div class="card-body">
                                     <div class="row pt-2">
 
@@ -91,7 +91,7 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            </div> --}}
 
                             <div class="d-flex" style="margin-left:400px; margin-top: 15px;">
                                 @if (Auth::check() && Auth::user()->hasRole('JURY'))
@@ -101,22 +101,16 @@
                                     </a>
                                 @endif
                             </div>
-                        </div> --}}
+                        </div>
+                        <br>
+                    </div>
 
-                    {{-- <br> --}}
-                    {{-- </div> --}}
-
-                    @if ((Auth::check() && Auth::user()->hasRole('SUPERADMIN')) || Auth::user()->hasRole('GRANDJURY'))
-
+                    @if ((Auth::check() && Auth::user()->hasRole('SUPERADMIN')) || Auth::user()->hasRole('ADMIN'))
                         <div class="card">
                             <div class="card-header">
                                 <h4 class="card-title">JURY SCORES</h4>
                             </div>
                             <div class="card-body">
-                                <p style="background-color: yellow">Would you recommend these films for market screening at
-                                    Marche du Film,
-                                    Cannes Film Festival?</p>
-
                                 <div class="card">
                                     <div class="card-body">
                                         <div class="row pt-2">
@@ -124,6 +118,7 @@
                                                 <table class="table custom-table">
                                                     <thead>
                                                         <tr>
+                                                            {{-- <th>Ref.No</th> --}}
                                                             <th>Jury Name</th>
                                                             <th>Overall Score</th>
                                                             <th>Feedback</th>
@@ -132,17 +127,10 @@
                                                     <tbody>
                                                         @foreach ($juryScores as $key => $score)
                                                             <tr>
+                                                                {{-- <td> {{ $score->id }} </td> --}}
                                                                 <td> {{ $score->user->name ?? '' }} </td>
                                                                 <td> {{ $score->overall_score ?? '' }} </td>
                                                                 <td> {{ $score->feedback ?? '' }} </td>
-                                                                @can('final-select')
-                                                                    <td>
-                                                                        <a href="{{ route('final-select', $score->festival_entry_id) }}"
-                                                                            class="btn btn-sm btn-primary" title="">
-                                                                            Select
-                                                                        </a>
-                                                                    </td>
-                                                                @endcan
                                                             </tr>
                                                         @endforeach
                                                     </tbody>
@@ -150,6 +138,7 @@
                                             @else
                                                 <p>Marks not given by Jury.!!</p>
                                             @endif
+
                                         </div>
                                     </div>
                                 </div>

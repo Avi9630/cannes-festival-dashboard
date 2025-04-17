@@ -54,11 +54,21 @@ Route::group(['middleware' => 'auth'], function () {
         Route::post('score-by/{id}',                'feedback');
         Route::post('assign_to/{id}',               'assignTo');
     });
-
+    
     Route::controller(GrandJuryController::class)->group(function () {
+        Route::get('scored-entries',            'scoredEntry')->name('scored-entries');
         Route::get('cannes-selected-list',      'index')->name('cannes-selected-list');
         Route::get('cannes-selected-view/{id}', 'view')->name('cannes-selected-view');
-        Route::get('selected-by-grand/{id}',    'selectedBy')->name('selected-by-grand');
+        Route::get('final-select/{id}',         'finalSelect')->name('final-select');
+        Route::post('assign-to-level2/{id}',    'assignTo');
+        
+        //LEVEL2
+        Route::get('cannes-level2-list',        'level2List')->name('cannes-level2-list');
+        Route::get('cannes-level2-view/{id}',   'level2view')->name('cannes-level2-view');
+        Route::get('score-by-level2/{id}',       'level2score');
+        Route::post('score-by-level2/{id}',      'level2feedback');
+        
+        // Route::get('selected-by-grand/{id}',    'selectedBy')->name('selected-by-grand');
     });
     Route::get('permission_search',     [PermissionController::class, 'search'])->name('permissions.search');
 });

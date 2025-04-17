@@ -37,9 +37,9 @@ class FestivalEntryController extends Controller
                 ->paginate(10);
             $count      =   $entries->count();
         } else {
-            $entries            =   FestivalEntry::where('disclaimer', 1)->orderBy('id', 'DESC')->paginate(10);
-            $count              =   FestivalEntry::where('disclaimer', 1)->count();
-            $festivalEntries    =   FestivalEntry::where('disclaimer', 1)->orderBy('id', 'DESC')->get();
+            $entries            =   FestivalEntry::where(['disclaimer'=> 1, 'status' => 1])->orderBy('id', 'DESC')->paginate(10);
+            $count              =   FestivalEntry::where(['disclaimer'=> 1, 'status' => 1])->count();
+            $festivalEntries    =   FestivalEntry::where(['disclaimer'=> 1, 'status' => 1])->orderBy('id', 'DESC')->get();
             session()->put('cannes-festival', $festivalEntries);
         }
         return view('festival-entry.index', [
@@ -93,6 +93,7 @@ class FestivalEntryController extends Controller
                 'overall_score'     =>  $payload['overall_score'],
                 'total_score'       =>  $payload['overall_score'],
                 'feedback'          =>  $payload['feedback'],
+                'level'             =>  1,
             ];
             $store = $juryAssign->update($arrayToUpdate);
             if ($store) {
@@ -130,11 +131,13 @@ class FestivalEntryController extends Controller
             if (!empty($payload['year'])) {
                 if ($payload['year'] === '1') {
                     $builder->where('disclaimer', 1);
+                    $builder->where('status', 1);
                 } elseif ($payload['year'] === '2') {
                     $builder->where('disclaimer', NULL);
                 }
             } else {
                 $builder->where('disclaimer', 1);
+                $builder->where('status', 1);
             }
         });
 
