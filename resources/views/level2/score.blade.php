@@ -81,7 +81,7 @@
                                 </div>
                             </form>
 
-                            {{-- <div class="card">
+                            <div class="card">
                                 <div class="card-body">
                                     <div class="row pt-2">
 
@@ -151,7 +151,7 @@
 
                                     </div>
                                 </div>
-                            </div> --}}
+                            </div>
                         </div>
                     </div>
                 </div>

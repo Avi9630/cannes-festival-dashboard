@@ -108,13 +108,13 @@
                     @if ((Auth::check() && Auth::user()->hasRole('SUPERADMIN')) || Auth::user()->hasRole('ADMIN'))
                         <div class="card">
                             <div class="card-header">
-                                <h4 class="card-title">LEVEL SCORES</h4>
+                                <h4 class="card-title">LEVEL Detials</h4>
                             </div>
                             <div class="card-body">
                                 <div class="card">
                                     <div class="card-body">
                                         <div class="row pt-2">
-                                            @if (isset($juryScores) && !empty($juryScores) && count($juryScores) > 0)
+                                            @if (isset($level1Details) && !empty($level1Details) > 0)
                                                 <table class="table custom-table">
                                                     <thead>
                                                         <tr>
@@ -125,14 +125,20 @@
                                                         </tr>
                                                     </thead>
                                                     <tbody>
-                                                        @foreach ($juryScores as $key => $score)
+                                                        {{-- @foreach ($juryScores as $key => $score)
                                                             <tr>
-                                                                {{-- <td> {{ $score->id }} </td> --}}
                                                                 <td> {{ $score->user->name ?? '' }} </td>
                                                                 <td> {{ $score->overall_score ?? '' }} </td>
                                                                 <td> {{ $score->feedback ?? '' }} </td>
                                                             </tr>
-                                                        @endforeach
+                                                        @endforeach --}}
+                                                        {{-- @foreach ($juryScores as $key => $score) --}}
+                                                        <tr>
+                                                            <td> {{ $level1Details->user->name ?? '' }} </td>
+                                                            <td> {{ $level1Details->overall_score ?? '' }} </td>
+                                                            <td> {{ $level1Details->feedback ?? '' }} </td>
+                                                        </tr>
+                                                        {{-- @endforeach --}}
                                                     </tbody>
                                                 </table>
                                             @else
@@ -145,6 +151,7 @@
                             </div>
                         </div>
                     @endif
+
                     {{-- LEVEL-2 --}}
                     @if ((Auth::check() && Auth::user()->hasRole('SUPERADMIN')) || Auth::user()->hasRole('ADMIN'))
                         <div class="card">
@@ -155,23 +162,21 @@
                                 <div class="card">
                                     <div class="card-body">
                                         <div class="row pt-2">
-                                            @if (isset($level2Scores) && !empty($level2Scores) && count($level2Scores) > 0)
+                                            @if (isset($level2Details) && !empty($level2Details) && count($level2Details) > 0)
                                                 <table class="table custom-table">
                                                     <thead>
                                                         <tr>
-                                                            {{-- <th>Ref.No</th> --}}
                                                             <th>Jury Name</th>
                                                             <th>Overall Score</th>
                                                             <th>Feedback</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody>
-                                                        @foreach ($level2Scores as $key => $score)
+                                                        @foreach ($level2Details as $key => $level2)
                                                             <tr>
-                                                                {{-- <td> {{ $score->id }} </td> --}}
-                                                                <td> {{ $score->user->name ?? '' }} </td>
-                                                                <td> {{ $score->overall_score ?? '' }} </td>
-                                                                <td> {{ $score->feedback ?? '' }} </td>
+                                                                <td> {{ $level2->user->name ?? '' }} </td>
+                                                                <td> {{ $level2->overall_score ?? '' }} </td>
+                                                                <td> {{ $level2->feedback ?? '' }} </td>
                                                             </tr>
                                                         @endforeach
                                                     </tbody>
@@ -185,6 +190,45 @@
                             </div>
                         </div>
                     @endif
+
+                    {{-- TOTAL SCORE --}}
+
+                    @if ((Auth::check() && Auth::user()->hasRole('SUPERADMIN')) || Auth::user()->hasRole('ADMIN'))
+                        <div class="card">
+                            <div class="card-header">
+                                <h4 class="card-title">TOTAL SCORES</h4>
+                            </div>
+                            <div class="card-body">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <div class="row pt-2">
+                                            <table class="table custom-table">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Level 1 Score</th>
+                                                        <th>Level 2 Score</th>
+                                                        <th>Total Score</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td> {{ isset($level1Score) && !empty($level1Score) ? $level1Score : null }}
+                                                        </td>
+                                                        <td> {{ isset($level2Score) && !empty($level2Score) ? $level2Score : null }}
+                                                        </td>
+                                                        @if (isset($level1Score) && isset($level2Score))
+                                                            <td> {{ $level1Score + $level2Score }} </td>
+                                                        @endif
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    @endif
+
                 </div>
             </div>
         </div>

@@ -183,16 +183,16 @@
                                                                 <button type="submit" id="submitButton"
                                                                     class="btn btn-sm btn-info">Assign</button>
                                                             </form>
-                                                        @elseif($entry->stage === 1)
+                                                        {{-- @elseif($entry->stage === 1)
                                                             <p style="color: blueviolet">Assigned to Level1</p>
                                                         @elseif($entry->stage === 2)
                                                             <p style="color: blueviolet">Score submitted by Level1</p>
                                                         @elseif($entry->stage === 3)
-                                                            <p style="color: blueviolet">Added to final selection list</p>
+                                                            <p style="color: blueviolet">Redy for final selection</p>
                                                         @elseif($entry->stage === 4)
                                                             <p style="color: blueviolet">Assigned to level2</p>
                                                         @elseif($entry->stage === 5)
-                                                            <p style="color: blueviolet">Score submitted by level2</p>
+                                                            <p style="color: blueviolet">Score submitted by level2</p> --}}
                                                         @endif
                                                     </td>
                                                 @endcan

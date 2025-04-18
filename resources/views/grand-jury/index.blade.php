@@ -45,9 +45,6 @@
                                     </thead>
                                     <tbody>
                                         @foreach ($entries as $key => $entry)
-                                        {{-- @php
-                                            dd($entry);
-                                        @endphp --}}
                                             <tr>
                                                 <td> {{ $entry->id }} </td>
                                                 <td> {{ $entry->NAME ?? '' }} </td>
@@ -57,7 +54,6 @@
                                                 @can('assign')
                                                     <td>
                                                         @if ($entry->stage === 3)
-
                                                             @php
                                                                 $juryRole = Spatie\Permission\Models\Role::where(
                                                                     'name',
@@ -69,8 +65,8 @@
                                                                     $query->where('id', $juryRole->id);
                                                                 })->get();
                                                             @endphp
-                                                            
-                                                            <form action="{{ url('assign-to-level2', $entry->id) }}" method="POST">
+                                                            <form action="{{ url('assign-to-level2', $entry->id) }}"
+                                                                method="POST">
                                                                 @csrf @method('POST')
                                                                 <select name="user_id" id="user_id"
                                                                     class="form-select @error('user_id') is-invalid @enderror">
@@ -91,10 +87,6 @@
                                                                 <button type="submit" id="submitButton"
                                                                     class="btn btn-sm btn-info">Assign</button>
                                                             </form>
-                                                        {{-- @elseif($entry->stage === 4)
-                                                            <p style="color: blueviolet">Assigned to Level2</p>
-                                                        @elseif($entry->stage === 5)
-                                                            <p style="color: blueviolet">Score submitted by Level2</p> --}}
                                                         @endif
                                                     </td>
                                                 @endcan

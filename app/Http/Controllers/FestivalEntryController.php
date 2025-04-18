@@ -9,13 +9,12 @@ use Maatwebsite\Excel\Facades\Excel;
 use Spatie\Permission\Models\Role;
 use App\Models\FestivalEntry;
 use Illuminate\Http\Request;
-use App\Models\JuryAssign;
 use App\Models\Level2Assign;
+use App\Models\JuryAssign;
 use App\Models\User;
 
 class FestivalEntryController extends Controller
 {
-
     public function __construct()
     {
         $this->user = Auth::user();
@@ -29,18 +28,17 @@ class FestivalEntryController extends Controller
             return redirect()->back()->with('warning', 'Role not valid.!!');
         }
         if ($roleName['name'] === 'JURY') {
-            $juryAssignIds = JuryAssign::where('user_id', $this->user->id)
-                ->pluck('festival_entry_id')
-                ->toArray();
-            $entries = FestivalEntry::whereIn('id', $juryAssignIds)
-                ->where('stage', 1)
+            $juryAssignIds = JuryAssign::where('user_id', $this->user->id)->pluck('festival_entry_id')->toArray();
+            $entries = FestivalEntry::whereIn('id', $juryAssignIds)->where('stage', 1)->orderBy('id', 'DESC')->paginate(10);
+            $count = $entries->count();
+        } else {
+            $entries = FestivalEntry::where(['disclaimer' => 1, 'status' => 1])
                 ->orderBy('id', 'DESC')
                 ->paginate(10);
-            $count      =   $entries->count();
-        } else {
-            $entries            =   FestivalEntry::where(['disclaimer'=> 1, 'status' => 1])->orderBy('id', 'DESC')->paginate(10);
-            $count              =   FestivalEntry::where(['disclaimer'=> 1, 'status' => 1])->count();
-            $festivalEntries    =   FestivalEntry::where(['disclaimer'=> 1, 'status' => 1])->orderBy('id', 'DESC')->get();
+            $count = FestivalEntry::where(['disclaimer' => 1, 'status' => 1])->count();
+            $festivalEntries = FestivalEntry::where(['disclaimer' => 1, 'status' => 1])
+                ->orderBy('id', 'DESC')
+                ->get();
             session()->put('cannes-festival', $festivalEntries);
         }
         return view('festival-entry.index', [
@@ -53,16 +51,19 @@ class FestivalEntryController extends Controller
     {
         $festival = FestivalEntry::find($id);
         if ($this->roleName['name'] === 'SUPERADMIN' || $this->roleName['name'] === 'ADMIN') {
-            $level1Score = JuryAssign::where('festival_entry_id', $id)
-                ->whereNotNull('overall_score')
-                ->get();
-            $level2Score = Level2Assign::where('festival_entry_id', $id)
-                ->whereNotNull('overall_score')
-                ->get();
+
+            $level1Details  =   JuryAssign::where('festival_entry_id', $id)->whereNotNull('overall_score')->first();
+            $level2Details  =   Level2Assign::where('festival_entry_id', $id)->whereNotNull('overall_score')->get();
+            
+            $level1Score    =   $level1Details['overall_score'] ?? 0;
+            $level2Score    =   $level2Details->sum('overall_score') ?? 0;
+
             return view('festival-entry.show', [
                 'festival'      =>  $festival,
-                'juryScores'    =>  $level1Score,
-                'level2Scores'  =>  $level2Score,
+                'level1Details' =>  $level1Details,
+                'level2Details' =>  $level2Details,
+                'level1Score'   =>  $level1Score,
+                'level2Score'  =>  $level2Score,
             ]);
         } else {
             return view('festival-entry.show', [
@@ -78,38 +79,41 @@ class FestivalEntryController extends Controller
             'festival' => $festival,
         ]);
     }
-
+    
     public function feedback(Request $request, $id)
     {
-        $payload = $request->all();
         $request->validate([
-            'overall_score' =>  'required|numeric|min:1|max:10',
-            'feedback'      =>  'required',
+            'overall_score' => 'required|numeric|min:1|max:10',
+            'feedback' => 'required',
         ]);
 
-        $juryAssign = JuryAssign::where(['user_id' => $this->user->id, 'festival_entry_id' => $id])->first();
+        $juryAssign = JuryAssign::where([
+            'user_id' => $this->user->id,
+            'festival_entry_id' => $id,
+        ])->first();
 
-        if ($juryAssign) {
-            $roleName = Role::select('name')->where('id', $this->user->role_id)->first();
-            if (!$roleName) {
-                return redirect()->back()->with('warning', 'Role not valid.!');
-            }
-            $arrayToUpdate = [
-                'overall_score'     =>  $payload['overall_score'],
-                'total_score'       =>  $payload['overall_score'],
-                'feedback'          =>  $payload['feedback'],
-                'level'             =>  1,
-            ];
-            $store = $juryAssign->update($arrayToUpdate);
-            if ($store) {
-                FestivalEntry::where('id', $id)->update(['stage' => FestivalEntry::Stages()['FEEDBACK_GIVEN_BY_JURY']]);
-                return redirect()->route('cannes-entries-list')->with('success', 'You have successfully submited your scores and feedback.!!');
-            } else {
-                return redirect()->back()->with('warning', 'Review not updated.!');
-            }
-        } else {
-            return redirect()->back()->with('warning', 'Something went wrong.!!');
+        if (!$juryAssign) {
+            return back()->with('warning', 'Something went wrong.');
         }
+
+        $roleName = Role::where('id', $this->user->role_id)->value('name');
+        if (!$roleName) {
+            return back()->with('warning', 'Role not valid.');
+        }
+
+        $arrayToUpdate = [
+            'overall_score' => $request->input('overall_score'),
+            'total_score' => $request->input('overall_score'),
+            'feedback' => $request->input('feedback'),
+            'level' => 1,
+        ];
+
+        if ($juryAssign->update($arrayToUpdate)) {
+            FestivalEntry::where('id', $id)->update(['stage' => FestivalEntry::Stages()['FEEDBACK_GIVEN_BY_JURY']]);
+            return redirect()->route('cannes-entries-list')->with('success', 'You have successfully submitted your scores and feedback.');
+        }
+
+        return back()->with('warning', 'Review not updated.');
     }
 
     public function search(Request $request)
@@ -119,7 +123,6 @@ class FestivalEntryController extends Controller
         $query = FestivalEntry::query();
 
         $query->when($payload, function (Builder $builder) use ($payload) {
-
             if (!empty($payload['from_date']) && !empty($payload['to_date'])) {
                 $builder->whereDate('created_at', '>=', $payload['from_date']);
                 $builder->whereDate('created_at', '<=', $payload['to_date']);
@@ -138,7 +141,7 @@ class FestivalEntryController extends Controller
                     $builder->where('disclaimer', 1);
                     $builder->where('status', 1);
                 } elseif ($payload['year'] === '2') {
-                    $builder->where('disclaimer', NULL);
+                    $builder->where('disclaimer', null);
                 }
             } else {
                 $builder->where('disclaimer', 1);
@@ -149,13 +152,13 @@ class FestivalEntryController extends Controller
         $filteredData = $query->get();
         session()->put('cannes-festival', $filteredData);
 
-        $entries    =   $query->orderBy('id', 'DESC')->paginate(10);
-        $count      =   $query->count();
+        $entries = $query->orderBy('id', 'DESC')->paginate(10);
+        $count = $query->count();
 
         return view('festival-entry.index', [
-            'entries'   =>  $entries,
-            'count'     =>  $count,
-            'payload'   =>  $payload
+            'entries' => $entries,
+            'count' => $count,
+            'payload' => $payload,
         ]);
     }
 
@@ -166,18 +169,15 @@ class FestivalEntryController extends Controller
             'user_id' => 'required|numeric',
         ]);
         $assignTo = [
-            'user_id'           =>  $payload['user_id'],
-            'festival_entry_id' =>  $id,
-            'assigned_by'       =>  Auth::user()->id,
+            'user_id' => $payload['user_id'],
+            'festival_entry_id' => $id,
+            'assigned_by' => Auth::user()->id,
         ];
 
-        $user       =   User::find($payload['user_id']);
-        $roleName   =   Role::select('name')
-            ->where('id', $user['role_id'])
-            ->first();
+        $user = User::find($payload['user_id']);
+        $roleName = Role::select('name')->where('id', $user['role_id'])->first();
 
         if (in_array($roleName['name'], ['JURY'])) {
-
             $checkRecords = JuryAssign::where([
                 'festival_entry_id' => $id,
             ])->first();

@@ -66,23 +66,23 @@ class User extends Authenticatable
     // 	return $this->hasOne(City::class,'id','city_id');
     // }
 
-    public function post()
-    {
-        return $this->hasOne(Post::class);
-    }
+    // public function post()
+    // {
+    //     return $this->hasOne(Post::class);
+    // }
 
-    public function assignments()
-    {
-        return $this->hasMany(AssignToJury::class, 'user_id');
-    }
+    // public function assignments()
+    // {
+    //     return $this->hasMany(AssignToJury::class, 'user_id');
+    // }
 
-    public function assignedJuries()
-    {
-        return $this->hasMany(AssignToJury::class, 'asigned_by');
-    }
+    // public function assignedJuries()
+    // {
+    //     return $this->hasMany(AssignToJury::class, 'asigned_by');
+    // }
 
-    public function cmotJuryAssigns()
-    {
-        return $this->hasMany(CmotJuryAssign::class, 'user_id');
-    }
+    // public function cmotJuryAssigns()
+    // {
+    //     return $this->hasMany(CmotJuryAssign::class, 'user_id');
+    // }
 }
