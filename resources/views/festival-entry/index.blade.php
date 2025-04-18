@@ -193,6 +193,8 @@
                                                             <p style="color: blueviolet">Assigned to level2</p>
                                                         @elseif($entry->stage === 5)
                                                             <p style="color: blueviolet">Score submitted by level2</p> --}}
+                                                            @else
+                                                            <p style="color: blueviolet">Evaluation is in process</p> 
                                                         @endif
                                                     </td>
                                                 @endcan
