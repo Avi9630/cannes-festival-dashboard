@@ -22,6 +22,7 @@ class WelcomeController extends Controller
             SUM(CASE WHEN stage = 2 THEN 1 ELSE 0 END) as totalScoreByJury,
             SUM(CASE WHEN stage = 3 THEN 1 ELSE 0 END) as totalSelectByGrandJury")
             ->where('disclaimer', 1)
+            ->where('status', 1)
             ->first();
 
         $totalEntries           = $totals->totalForms;
