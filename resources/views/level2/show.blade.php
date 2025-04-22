@@ -97,7 +97,7 @@
                                 @if (Auth::check() && Auth::user()->hasRole('JURY'))
                                     <a href="{{ url('score-by', $festival->id) }}" class="btn btn-sm btn-primary"
                                         style="margin-right: 5px;">
-                                        Your Scors
+                                        Your Score
                                     </a>
                                 @endif
                             </div>
